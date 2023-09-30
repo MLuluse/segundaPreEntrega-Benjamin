@@ -1,5 +1,18 @@
 <div class="table-responsive container my-5">
-    <h2 class="text-center">Products</h2>
+    <h2 class="text-center">Productos</h2>
+<hr />
+    <div align="center">
+    {{#if paginateInfo.hasPrevPage}}
+        <a href="{{paginateInfo.prevLink}}">Anterior</a>
+    {{/if}}
+    {{#each paginateInfo.totalPages}}
+        <a href="{{this.link}}">{{this.page}}</a>
+    {{/each}}
+    {{#if paginateInfo.hasNextPage}}
+        <a href="{{paginateInfo.nextLink}}">Siguiente</a>
+    {{/if}}
+  </div>
+<hr />
     <table class="table table-bordered table-striped table-hover text-center">
         <thead class="thead-dark">
             <tr>
@@ -20,8 +33,33 @@
                     <td>{{this.code}}</td>
                     <td>{{this.category}}</td>
                     <td>{{this.stock}}</td>
+                    <td><button class="btn btn-danger" onclick="addProductToCart('{{this._id}}')">Agregar al carrito</button></td>
                 </tr>
             {{/each}}
         </tbody>
     </table>
 </div>
+
+<script>
+  addProductToCart = (pid) => {
+       fetch('/api/carts', {
+       method: 'post',
+       })
+            .then(result => result.json())
+            .then(result => {
+                if (result.status === 'error') throw new Error(result.error)
+                return result.payload._id
+            })
+            .then(cid => 
+                fetch(`/api/carts/${cid}/product/${pid}`, {
+                    method: 'post'
+                })
+            )
+            .then(result => result.json())
+            .then(result => {
+                if (result.status === 'error') throw new Error(result.error)
+                alert(`Ok. Todo salió bien! :)\nEl producto se agregó al carrito con id=${result.payload._id}!`)
+            })
+            .catch(err => alert(`Ocurrió un error :(\n${err}`))
+    }
+</script>

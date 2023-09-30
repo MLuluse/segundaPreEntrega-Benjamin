@@ -1,26 +1,56 @@
-import { Router } from 'express'
-import ProductManager from '../productManager.js' 
+import {Router} from "express"
+import { getProductsFromDB } from "./products.router.js"
+import { getProductsFromCart } from "./cart.router.js"
+import { PORT } from '../app.js'
 
 const router = Router()
 
-const productManager = new ProductManager('./data/products.json')
-
-
-router.get('/home', async (req, res) => {
-    const products = await productManager.getProducts()
-    if (!products) return res.status(404).json({ status: 'error', error: 'no hay productos'})
-    return  res.render("home", { products })
+router.get('/', async (req, res) => {
+    const result = await getProductsFromDB(req, res)
+    if (result.statusCode === 200) {
+        const totalPages = []
+        let link
+        for (let index = 1; index <= result.response.totalPages; index++) {
+            if (!req.query.page) {
+                link = `http://${req.hostname}:${PORT}${req.originalUrl}&page=${index}`
+            } else {
+                const modifiedUrl = req.originalUrl.replace(`page=${req.query.page}`, `page=${index}`)
+                link = `http://${req.hostname}:${PORT}${modifiedUrl}`
+            }
+            totalPages.push({ page: index, link })
+        }
+        res.render('home', { products: result.response.payload, paginateInfo: {
+                hasPrevPage: result.response.hasPrevPage,
+                hasNextPage: result.response.hasNextPage,
+                prevLink: result.response.prevLink,
+                nextLink: result.response.nextLink,
+                totalPages
+            }
+        })
+    } else {
+        res.status(result.statusCode).json({ status: 'error', error: result.response.error })
+    }
 })
 
-router.get('/realtimeproducts', async(req, res) => {
-    const products = await productManager.getProducts()
-    return res.render('realTimeProducts', { products })
-
+router.get('/realtimeproducts', async (req, res) => {
+    const result = await getProductsFromDB(req, res)
+    console.log('resultado del realtime', result)
+    if (result.statusCode === 200) {
+        res.render('realTimeProducts', { products: result.response.payload })
+    } else {
+        res.status(result.statusCode).json({ status: 'error', error: result.response.error })
+    }
 })
 
-router.get('/chat', (req, res) => {
-    res.render('chat', {}) //renderiza el chat.handlebars
+router.get('/:cid', async(req, res) => {
+    const result = await getProductsFromCart(req, res)
+    //console.log('este es el result del get', result)
+    if (result.statusCode === 200) {
+        res.render('cart', { cart: result.response.payload})
+        //console.log(result.response.payload)
+    } else {
+        res.status(result.statusCode).json({ status: 'error', error: result.response.error })
+    }
 })
-
 
 export default router

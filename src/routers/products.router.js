@@ -1,58 +1,134 @@
-import { Router } from "express"; 
-import ProductManager from '../productManager.js'
+import { Router } from "express";
+import productModel from "../dao/models/product.model.js";
+import { PORT } from "../app.js";
 
-const router = Router() 
-const productManager = new ProductManager('./data/products.json')
+const router = Router()
 
-router.get('/', async (req, res) => {
-    const result = await productManager.getProducts();
-    const limit = req.query.limit;
-    if (typeof result == "string") {
-      return res.status(parseInt(error[0].slice(1, 4))).json({ error: result.slice(6) });
+export const getProductsFromDB =  async( req, res) =>{
+    try{
+        // recibe por query el limite de productos  y paginas
+        const limit = req.query.limit || 10
+        const currentPage = parseInt(req.query.page) || 1
+        //opciones de filtrado por categoria o disponibilidad
+        const filterOptions = {}
+        if (req.query.stock) filterOptions.stock = req.query.stock
+        if (req.query.category) filterOptions.category = req.query.category
+        const paginateOptions = { lean: true, limit, currentPage}
+        //aca hace un sort ascendente o descendentes segun se pida
+        if (req.query.sort === 'asc') paginateOptions.sort = { price: 1 }
+        if (req.query.sort === 'desc') paginateOptions.sort = { price: -1 }
+
+        const result = await productModel.paginate(filterOptions, paginateOptions)
+        console.log(result)
+        
+        //aca traigo metodos http, para hacer los links
+        const protocol = req.protocol;
+        const baseUrl = req.baseUrl;
+        
+        const prevPage = currentPage > 1 ? currentPage - 1 : 1;
+        const nextPage = currentPage + 1;
+        const prevLink = `${protocol}://${req.hostname}:${PORT}${baseUrl}?page=${prevPage}`;
+        const nextLink = `${protocol}://${req.hostname}:${PORT}${baseUrl}?page=${nextPage}`;
+        
+        return {
+            statusCode: 200,
+            response: { 
+                status: 'success', 
+                payload: result.docs,
+                totalPages: result.totalPages,
+                prevPage: result.prevPage,
+                nextPage: result.nextPage,
+                page: result.page,
+                hasPrevPage: result.hasPrevPage,
+                hasNextPage: result.hasNextPage,
+                prevLink: result.hasPrevPage ? prevLink : null,
+                nextLink: result.hasNextPage ? nextLink : null
+            }
+        }
+        
+
+    }catch(err){
+        return('Error al recibir los productos del DB', err.message)
+
+
     }
-    res.status(200).json({ payload: result.slice(0, limit) });
-  });
 
-router.get('/:pid', async (req, res) => {
-    const id = parseInt(req.params.pid)
-    const result = await productManager.getProductById(id)
-  
-    if (!result) return res.status(404).json({ status: "error", payload: "El producto no existe, esto es Router" })
-     res.status(200).json({ payload: result })
-  });
+}
 
 
-router.post('/', async(req, res)=>{
-  const product = req.body
-  const result = await productManager.addProduct(product)
-  if(!result) return res.status(404).json({status: 'error', error: 'no se puede subir'})
- 
-  return res.status(201).json({status:'success', payload:result})
+router.get('/', async(req, res) =>{
+    // trae todos los productos
+    try{
+    let productos = await getProductsFromDB(req, res)
+
+    if (!productos || productos.length === 0 ) res.status(404).json({status:'error', payload:'No hay productos para devolver'})
+    res.status(200).json({ payload: productos });
+
+}catch(err){
+
+    res.status(500).json({status:'Error', payload: err.message})
+}
 })
 
+//trae un producto por id
+router.get('/:pid', async(req, res) => {
+    const productId = req.params.pid
+    try {
+    const product = await productModel.findById(productId).lean().exec()
+    if (!product) return res.status(404).json({ status: "error", payload: "El producto no existe, esto es Router" })
+    res.status(200).json({ payload:product})
+    }catch (err) {
+        res.status(500).json({status: 'error', error: err.message})
+    }
+})
+
+//postea producto en db
+router.post('/', async(req, res) => {
+    const product =  req.body
+    try{
+        const newProduct = await productModel.create(product)   
+        const products =  await productModel.find().lean().exec()
+        
+        res.status(201).json({ status: 'success', payload: products})
+
+    }catch(err) {
+        res.status(500).json({status: 'error', error: err.message})
+    }
+})
+
+
+//actualiza un producto especifico por id
 router.put('/:pid', async(req, res) => {
-  const pid = parseInt(req.params.pid)
-  const data = req.body
-  const result = await productManager.updateProduct(pid, data)
-  if(!result) return res.status(404).json({status: 'error', error: 'No modificar el prod'})
- 
-  return res.status(201).json({status: 'success', payload:result})
+    const productId = req.params.pid
+    const info = req.body
+    try{
+    const prodactualizado = await productModel.updateOne({_id: productId},info)
+    if (!prodactualizado) {
+        return res.status(404).json({ status: 'error', error: 'Not found' })
+    }
+    const products = await productModel.find().lean().exec()
+    res.status(200).json({status: 'success', payload: products})
 
+    }catch(err){
+        res.status(500).json({status: 'error', error: err.message})
+    }
 })
 
 
+//borra un producto por id
 router.delete('/:pid', async( req, res) =>{
-  const id = parseInt(req.params.pid); //obtengo el id del producto a eliminar
-
-      const product = await productManager.getProducts()
-      const productId = product.find(item => item.pid == id)
-      if (!productId) {return res.status(404).json({error: 'El producto no existe'})}
-       
-      await productManager.deleteProduct(id)
-      return res.status(200).json({status: "success", payload:`Product ID: ${id} was deleted`});
+    const productId = req.params.pid
+    try{
+        const borrar =  await productModel.findOneAndDelete({_id:productId})
+        if (!borrar) {
+            return res.status(404).json({ status: 'error', error: 'no existe el producto a borrar' })
+        }
+        const products = await productModel.find().lean().exec()
+        res.status(200).json({status: 'success', payload: products})
  
+    }catch(err){
+        res.status(500).json({status: 'error', error: err.message})
+    }
 })
-  
 
-
-  export default router 
+export default router

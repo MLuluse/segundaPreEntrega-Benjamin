@@ -1,12 +1,24 @@
+<body class="bg-gray-100 h-screen flex flex-col gap-5 justify-center items-center"></body>
 <h1>Chat con socket y handlebars</h1>
-<div>
-  <i id="username"></i>  <input id="chatbox" type="text">
-</div>
-<div id="log"> <!-- contiene el historial de mensajes  message-log-->
 
-</div>
+    <header>
+        <h1 id="username" class="text-gray-400 text-2xl">
+        </h1>
+    </header>
+    <main class="bg-white p-4 rounded-lg shadow-md w-96">
+        <section class="flex mt-1">
+            <input type="text" placeholder="Comencemos a chatear..."
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                id="chatbox">
+        </section>
 
+                <section class=" h-96 overflow-y-scroll" id="log">
+
+        </section>
+    </main>
+</body>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script><!--este es el cdn de sweetalert para pedir nombre en alerta-->
+<script src="https://cdn.tailwindcss.com"></script>
 <script src="/socket.io/socket.io.js"></script><!--aca hace referencia al socketClient-->
 <script src="chat.js"></script>
