@@ -8,28 +8,32 @@ export const getProductsFromDB =  async( req, res) =>{
     try{
         // recibe por query el limite de productos  y paginas
         const limit = req.query.limit || 10
-        const currentPage = parseInt(req.query.page) || 1
+        const currentPage = req.query.page || 1
+
         //opciones de filtrado por categoria o disponibilidad
         const filterOptions = {}
         if (req.query.stock) filterOptions.stock = req.query.stock
         if (req.query.category) filterOptions.category = req.query.category
         const paginateOptions = { lean: true, limit, currentPage}
+
         //aca hace un sort ascendente o descendentes segun se pida
         if (req.query.sort === 'asc') paginateOptions.sort = { price: 1 }
         if (req.query.sort === 'desc') paginateOptions.sort = { price: -1 }
 
         const result = await productModel.paginate(filterOptions, paginateOptions)
-        console.log(result)
+        // console.log('resultado de lo que trae el result de paginate', result)
         
         //aca traigo metodos http, para hacer los links
         const protocol = req.protocol;
         const baseUrl = req.baseUrl;
         
-        const prevPage = currentPage > 1 ? currentPage - 1 : 1;
-        const nextPage = currentPage + 1;
+        const prevPage = currentPage > 1 ? currentPage - 1 : null
+        const nextPage = currentPage < result.totalPages ? currentPage + 1 : null
+
         const prevLink = `${protocol}://${req.hostname}:${PORT}${baseUrl}?page=${prevPage}`;
-        const nextLink = `${protocol}://${req.hostname}:${PORT}${baseUrl}?page=${nextPage}`;
-        
+        const nextLink = `${protocol}://${req.hostname}:${PORT}${baseUrl}?page=${nextPage}`
+
+       
         return {
             statusCode: 200,
             response: { 
@@ -45,6 +49,8 @@ export const getProductsFromDB =  async( req, res) =>{
                 nextLink: result.hasNextPage ? nextLink : null
             }
         }
+
+
         
 
     }catch(err){

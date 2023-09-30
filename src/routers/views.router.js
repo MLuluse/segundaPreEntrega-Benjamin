@@ -7,6 +7,7 @@ const router = Router()
 
 router.get('/', async (req, res) => {
     const result = await getProductsFromDB(req, res)
+    console.log('resultado de get en views', result)
     if (result.statusCode === 200) {
         const totalPages = []
         let link
@@ -34,7 +35,7 @@ router.get('/', async (req, res) => {
 
 router.get('/realtimeproducts', async (req, res) => {
     const result = await getProductsFromDB(req, res)
-    console.log('resultado del realtime', result)
+    //console.log('resultado del realtime', result)
     if (result.statusCode === 200) {
         res.render('realTimeProducts', { products: result.response.payload })
     } else {
