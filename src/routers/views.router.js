@@ -2,10 +2,11 @@ import {Router} from "express"
 import { getProductsFromDB } from "./products.router.js"
 import { getProductsFromCart } from "./cart.router.js"
 import { PORT } from '../app.js'
+import { publicRoutes } from '../middlewares/auth.middleware.js'
 
 const router = Router()
 
-router.get('/', async (req, res) => {
+router.get('/', publicRoutes ,async (req, res) => {
     const result = await getProductsFromDB(req, res)
     console.log('resultado de get en views', result)
     if (result.statusCode === 200) {
@@ -20,7 +21,9 @@ router.get('/', async (req, res) => {
             }
             totalPages.push({ page: index, link })
         }
-        res.render('home', { products: result.response.payload, paginateInfo: {
+
+        const user =  req.session.user
+        res.render('home', { user, products: result.response.payload, paginateInfo: {
                 hasPrevPage: result.response.hasPrevPage,
                 hasNextPage: result.response.hasNextPage,
                 prevLink: result.response.prevLink,

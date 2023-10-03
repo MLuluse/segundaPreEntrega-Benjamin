@@ -2,11 +2,15 @@ import express from "express";
 import handlebars from "express-handlebars";
 import { Server } from "socket.io";
 import mongoose from "mongoose";
+import session from 'express-session'
+import MongoStore from "connect-mongo";
 //-----Nuevos router despues de Mongoose-------//
 import chatRouter from './routers/chat.router.js'
 import productsRouter from "./routers/products.router.js";
 import cartRouter from "./routers/cart.router.js"
 import viewsNRouter from "./routers/views.router.js";
+import sessionViewsRouter from './routers/sessionviews.router.js'
+import sessionRouter from './routers/sessions.router.js';
 
 
 export const PORT = 8080
@@ -15,6 +19,15 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use(session ({
+  store: MongoStore.create({
+    mongoUrl: "mongodb+srv://coder:coder@cluster0.9dp3egu.mongodb.net/",
+    dbName: "ecommerce"
+  }),
+  secret: 'secret',
+  resave: true,
+  saveUninitialized: true
+}))
 
 //aca setea handlebars
 app.engine("handlebars", handlebars.engine());
@@ -50,13 +63,15 @@ try {
       socketServer.emit("logs", messages);
     });
   });
-  // renderiza el view de un index sin nada
-  app.get('/', (req, res) => res.render('index'))
+
+  
   //Data OnWire
   app.use("/api/products", productsRouter);
   app.use("/api/carts", cartRouter);
+  app.use("/api/sessions", sessionRouter);
   
   //HtMl On Wire
+  app.get('/', sessionViewsRouter)
   app.use("/products", viewsNRouter);
   app.use("/carts", viewsNRouter);
 
