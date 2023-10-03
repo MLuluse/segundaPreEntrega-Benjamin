@@ -63,8 +63,8 @@ try {
       socketServer.emit("logs", messages);
     });
   });
+//probando algo 
 
-  
   //Data OnWire
   app.use("/api/products", productsRouter);
   app.use("/api/carts", cartRouter);
