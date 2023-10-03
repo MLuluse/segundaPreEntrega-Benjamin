@@ -5,8 +5,9 @@ import { privateRoutes, publicRoutes } from '../middlewares/auth.middleware.js'
 const router = Router()
 
 router.get('/register', async(req, res) => {
-    
-    res.redirect('sessions/register')
+  //  res.send('accediendo al register')
+     
+   res.render('sessions/register')
 })
 
 router.get('/', privateRoutes, async (req, res) =>{

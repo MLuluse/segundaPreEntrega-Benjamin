@@ -30,8 +30,8 @@ export const getProductsFromDB =  async( req, res) =>{
         const prevPage = currentPage > 1 ? currentPage - 1 : null
         const nextPage = currentPage < result.totalPages ? currentPage + 1 : null
 
-        const prevLink = `${protocol}://${req.hostname}:${PORT}${baseUrl}?page=${prevPage}`;
-        const nextLink = `${protocol}://${req.hostname}:${PORT}${baseUrl}?page=${nextPage}`
+        const prevLink = `${protocol}://${req.hostname}:${PORT}${baseUrl}?&page=${prevPage}`;
+        const nextLink = `${protocol}://${req.hostname}:${PORT}${baseUrl}?&page=${nextPage}`
 
        
         return {

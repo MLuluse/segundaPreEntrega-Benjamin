@@ -6,6 +6,8 @@ import userModel from '../dao/models/user.model.js'
 const router = Router()
 
 router.post('/register', async(req, res) =>{
+
+console.log('Recibiendo solicitud POST en /api/sessions/register' )
     const newUser = req.body
     const user = await userModel.create(newUser)
     console.log(user)
