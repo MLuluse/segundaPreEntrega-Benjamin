@@ -70,7 +70,7 @@ try {
   app.use("/api/sessions", sessionRouter);
   
   //HtMl On Wire
-  app.get('/', sessionViewsRouter)
+  app.use('/', sessionViewsRouter)
   app.use("/products", viewsNRouter);
   app.use("/carts", viewsNRouter);
 
