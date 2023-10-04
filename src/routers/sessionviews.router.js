@@ -4,13 +4,12 @@ import { privateRoutes, publicRoutes } from '../middlewares/auth.middleware.js'
 
 const router = Router()
 
-router.get('/register', async(req, res) => {
-  //  res.send('accediendo al register')
-     
+router.get('/register', privateRoutes, async (req, res) => {
+
    res.render('sessions/register')
 })
 
-router.get('/', privateRoutes, async (req, res) =>{
+router.get('/', async (req, res) =>{
     res.render('sessions/login')
 })
 
