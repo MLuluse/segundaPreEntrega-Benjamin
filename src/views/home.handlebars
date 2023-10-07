@@ -52,7 +52,7 @@
                 return result.payload._id
             })
             .then(cid => 
-                fetch(`/api/carts/${cid}/product/${pid}`, {
+                fetch(`/api/carts/${cid}/products/${pid}`, {
                     method: 'post'
                 })
             )

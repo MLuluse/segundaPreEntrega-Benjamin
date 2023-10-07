@@ -31,7 +31,7 @@ export const getProductsFromCart = async (req, res) => {
 //ruta que crea el carrito
 router.post('/', async(req, res) => {
     try{
-    const result = cartModel.create({})
+    const result = await cartModel.create({})
     res.status(201).json({status:'success', payload: result})
     }catch(err){
      res.status(500).json({ status: 'error', error: err.message })

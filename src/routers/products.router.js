@@ -8,13 +8,13 @@ export const getProductsFromDB =  async( req, res) =>{
     try{
         // recibe por query el limite de productos  y paginas
         const limit = req.query.limit || 10
-        const currentPage = req.query.page || 1
+        const currentPage = parseInt(req.query.page) || 1
 
         //opciones de filtrado por categoria o disponibilidad
         const filterOptions = {}
         if (req.query.stock) filterOptions.stock = req.query.stock
         if (req.query.category) filterOptions.category = req.query.category
-        const paginateOptions = { lean: true, limit, currentPage}
+        const paginateOptions = { lean: true, limit, page:currentPage}
 
         //aca hace un sort ascendente o descendentes segun se pida
         if (req.query.sort === 'asc') paginateOptions.sort = { price: 1 }
