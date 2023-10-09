@@ -7,17 +7,30 @@ const router = Router()
 
 router.post('/register', async(req, res) =>{
     const newUser = req.body
-    const user = await userModel.create(newUser)
-    console.log(user)
-    res.redirect ('/')
+    try{
+      const existingUser = await userModel.findOne({email: newUser.email})
+      if(existingUser){
+         res.status(400).json({message:'El correo ya esta en uso'})
+      }else{
+         const user = await userModel.create(newUser)
+      //el exito esta en el url
+         res.redirect ('/?exito=Registo exitoso')
+
+      }
+    }catch(error){
+      res.status(500).json({ message: `Hubo un error en el servidor ${error}`})
+
+    }
 })
 
 router.post('/login', async(req, res) => {
+   try{
    const {email, password} = req.body
    const user = await userModel.findOne({email, password}).lean().exec()
   
    if(!user){
-      return res.redirect('/')
+      //el error lo miestra en la url
+      return res.redirect('/?error=Datos incorrectos')
    }
    if(user.email === 'adminCoder@coder.com' && user.password === 'adminCod3r123'){
       user.role = 'admin'
@@ -27,7 +40,9 @@ router.post('/login', async(req, res) => {
 
    req.session.user = user
    res.redirect('/products')
-
+   }catch(error){
+      res.status(500).json({message: `Hubo un error en el servidor ${error}`})
+   }
 
 router.get('/logout', (req, res) => {
    req.session.destroy(err => {
