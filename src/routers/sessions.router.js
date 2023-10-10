@@ -26,18 +26,22 @@ router.post('/register', async(req, res) =>{
 router.post('/login', async(req, res) => {
    try{
    const {email, password} = req.body
+       if(email === 'adminCoder@coder.com' && pasword === 'adminCod3r123')
+           const adminUser = {
+            email: 'adminCoder@coder.com',
+            password: 'adminCod3r123',
+            role: 'admin'
+           }
+       req.session.user = adminUser,
+       return res.redirect('/products')
+   }   
    const user = await userModel.findOne({email, password}).lean().exec()
-  
    if(!user){
       //el error lo miestra en la url
       return res.redirect('/?error=Datos incorrectos')
    }
-   if(user.email === 'adminCoder@coder.com' && user.password === 'adminCod3r123'){
-      user.role = 'admin'
-   }else{
-      user.role = 'user'
-   }
-
+    
+   user.role = 'user'
    req.session.user = user
    res.redirect('/products')
    }catch(error){
