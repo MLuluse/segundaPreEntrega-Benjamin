@@ -26,7 +26,7 @@ router.post('/register', async(req, res) =>{
 router.post('/login', async(req, res) => {
    try{
    const {email, password} = req.body
-       if(email === 'adminCoder@coder.com' && pasword === 'adminCod3r123')
+       if(email === 'adminCoder@coder.com' && pasword === 'adminCod3r123'){
            const adminUser = {
             email: 'adminCoder@coder.com',
             password: 'adminCod3r123',
