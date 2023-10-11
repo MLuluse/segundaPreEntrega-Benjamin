@@ -4,13 +4,16 @@ import { Server } from "socket.io";
 import mongoose from "mongoose";
 import session from 'express-session'
 import MongoStore from "connect-mongo";
+//----passport----//
+import passport from "passport";    //core de la libreria 
+import initializePassport from "./config/passport.config.js";  // funcion que escribi en config
 //-----Nuevos router despues de Mongoose-------//
 import chatRouter from './routers/chat.router.js'
 import productsRouter from "./routers/products.router.js";
 import cartRouter from "./routers/cart.router.js"
 import viewsNRouter from "./routers/views.router.js";
 import sessionViewsRouter from './routers/sessionviews.router.js'
-import sessionRouter from './routers/sessions.router.js';
+import sessionRouter from './routers/session.router.js';
 
 
 export const PORT = 8080
@@ -35,6 +38,11 @@ app.set("views", "./src/views");
 app.set("view engine", "handlebars");
 
 app.use(express.static("./src/public")); //esto para mostara vistas
+
+//aca setea passport
+initializePassport()  //ejecuto initializePassport para que arranque
+app.use(passport.initialize())  // inicio pasport
+app.use(passport.session())   //inicio la session de passport
 
 try {
   await mongoose.connect(
@@ -67,7 +75,7 @@ try {
   //Data OnWire
   app.use("/api/products", productsRouter);
   app.use("/api/carts", cartRouter);
-  app.use("/api/sessions", sessionRouter);
+  app.use("/api/session", sessionRouter);
   
   //HtMl On Wire
   app.use('/', sessionViewsRouter)

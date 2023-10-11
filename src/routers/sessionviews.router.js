@@ -4,7 +4,7 @@ import { privateRoutes, publicRoutes } from '../middlewares/auth.middleware.js'
 
 const router = Router()
 
-router.get('/register', privateRoutes, async (req, res) => {
+router.get('/register', async (req, res) => {
 
    res.render('sessions/register')
 })
@@ -13,7 +13,7 @@ router.get('/', async (req, res) =>{
     res.render('sessions/login')
 })
 
-router.get('/profile', publicRoutes, (req, res) => {
+router.get('/profile',(req, res) => {
     res.render('sessions/profile', req.session.user)
 })
 

@@ -1,7 +1,7 @@
 <div class="container border border-2 ">
 <h1>Iniciar Sesion</h1>
 <div class="mb-4" >
-<form action="/api/sessions/login" method="post">
+<form action="/api/session/login" method="post">
 <label for="exampleFormControlInput1" class="form-label">Email</label>
 <input class="form-control" type="text" name="email">
 <label for="exampleFormControlInput1" class="form-label">Password</label>
@@ -9,8 +9,9 @@
 {{#if error}}
   <p class="error">{{ error }}</p>
 {{/if}}
-<input class="btn btn-primary" type="submit" value="Iniciar Sesion"> 
-<a class="btn btn-primary" href="/register">Registrate</a>
+<input class="btn btn-primary" type="submit" value="Iniciar Sesion"> | <a class="btn btn-secondary"  href="/api/session/github">Login with GitHub</a> |
+<a class="btn btn-success" href="/register">Registrate</a>
+
 </form>
 </div>
 </div>
