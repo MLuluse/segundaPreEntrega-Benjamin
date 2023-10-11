@@ -37,7 +37,7 @@ const initializePassport = () => {
             if (username === 'adminCoder@coder.com' && password === 'adminCod3r123') {
                 const admin = {
                     _id: 'admin', 
-                    first_name: 'adminCoder@coder.com',
+                    first_name: 'Administrador',
                     email: username,
                     role: 'admin',
                 };
