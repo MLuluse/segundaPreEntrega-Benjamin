@@ -3,7 +3,7 @@ import local from 'passport-local'
 import GitHubStrategy from 'passport-github2'
 import { createHash, isValidPassword } from "../utils.js"
 import userModel from "../dao/models/user.model.js"
-import cartModel from "../dao/models/user.model.js"
+import cartModel from "../dao/models/cart.model.js"
 
 
 const localStrategy = local.Strategy 
@@ -16,7 +16,7 @@ const initializePassport = () => {
     }, async( req, username, password, done ) =>{
         const {first_name, last_name, email, age} = req.body
         try{
-            const user = await userModel.findOne({ email: username })
+            const user = await userModel.findOne({email: username })
             if (user){
                 console.log('El usuario ya existe')
                 return done(null, false)
@@ -25,7 +25,7 @@ const initializePassport = () => {
             const Cart = await cartModel.create({}) //creo el carrito para el register
 
             const newUser = {
-                first_name, last_name, email, age, role:'user', password: createHash(password), cart: Cart._id,
+                first_name, last_name, email, age, password: createHash(password), cart: Cart._id,
             }
             const result = await userModel.create(newUser)
             return done (null, result)
@@ -64,7 +64,7 @@ const initializePassport = () => {
         clientSecret: '44f85f6d2c8c2bb408eb881afa43c7836e48d435',
         callbackURL: 'http://localhost:8080/api/session/githubcallback'
     }, async(accessToken, refreshToken, profile, done) =>{
-        console.log(profile)
+       // console.log(profile)
         try{
             const user = await userModel.findOne({email: profile._json.email})
             if (user) return done(null, user) //si ya existe el ususario no lo guarda en base de datos
@@ -80,7 +80,7 @@ const initializePassport = () => {
             })
             return done(null, newUser)
         }catch(err) {
-            return done('Error to login with github')
+            return done(`Error to login with github ${err}`)
         }
     }))
 

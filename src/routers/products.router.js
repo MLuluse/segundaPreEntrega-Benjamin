@@ -9,6 +9,7 @@ export const getProductsFromDB =  async( req, res) =>{
         // recibe por query el limite de productos  y paginas
         const limit = req.query.limit || 10
         const currentPage = parseInt(req.query.page) || 1
+        //const {limit = 10, currentPage = 1 } = req.query
 
         //opciones de filtrado por categoria o disponibilidad
         const filterOptions = {}

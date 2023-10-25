@@ -21,6 +21,7 @@ const cartSchema = new mongoose.Schema({
 mongoose.set('strictQuery', false);
 
 cartSchema.plugin(mongoosePaginate)
+
 const cartModel = mongoose.model(cartCollection, cartSchema)
 
 export default cartModel
