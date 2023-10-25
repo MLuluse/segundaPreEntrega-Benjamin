@@ -3,6 +3,7 @@ import local from 'passport-local'
 import GitHubStrategy from 'passport-github2'
 import { createHash, isValidPassword } from "../utils.js"
 import userModel from "../dao/models/user.model.js"
+import cartModel from "../dao/models/user.model.js"
 
 
 const localStrategy = local.Strategy 
@@ -17,10 +18,14 @@ const initializePassport = () => {
         try{
             const user = await userModel.findOne({ email: username })
             if (user){
+                console.log('El usuario ya existe')
                 return done(null, false)
             }
+
+            const Cart = await cartModel.create({}) //creo el carrito para el register
+
             const newUser = {
-                first_name, last_name, email, age, role:'user', password: createHash(password)
+                first_name, last_name, email, age, role:'user', password: createHash(password), cart: Cart._id,
             }
             const result = await userModel.create(newUser)
             return done (null, result)
@@ -63,12 +68,15 @@ const initializePassport = () => {
         try{
             const user = await userModel.findOne({email: profile._json.email})
             if (user) return done(null, user) //si ya existe el ususario no lo guarda en base de datos
+
+            const Cart = await cartModel.create({})  //creo el carrito para github
             const newUser = await userModel.create({
                 first_name: profile._json.login,
                 last_name: profile._json.name,
                 email: profile._json.email,
                 password: profile._json.password,
-                role: profile._json.type
+                role: profile._json.type,
+                cart: Cart._id
             })
             return done(null, newUser)
         }catch(err) {

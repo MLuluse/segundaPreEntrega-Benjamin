@@ -52,12 +52,12 @@ router.get('/:cid', async (req, res) => {
 router.post('/:cid/products/:pid', async (req, res) => {
     const cid = req.params.cid
     const pid = req.params.pid
+    const cartToUpdate = await cartModel.findById(cid).lean()
     try {
-        const cartToUpdate = await cartModel.findById(cid)
         if (cartToUpdate === null) {
             return res.status(404).json({ status: 'error', error: `Cart with id=${cid} Not found` })
         }
-        const productToAdd = await productModel.findById(pid)
+        const productToAdd = await productModel.findById(pid).lean()
         if (productToAdd === null) {
             return res.status(404).json({ status: 'error', error: `Product with id=${pid} Not found` })
         }
@@ -67,14 +67,11 @@ router.post('/:cid/products/:pid', async (req, res) => {
         } else {
             cartToUpdate.products.push({ product: pid, quantity: 1 })
         }
-        const result = await cartModel.findByIdAndUpdate(cid, cartToUpdate, { returnDocument: 'after' })
+        const result = await cartModel.findByIdAndUpdate(cid, cartToUpdate, { returnDocument: 'after' }).lean()
         res.status(201).json({ status: 'success', payload: result })
     } catch(err) {
         res.status(500).json({ status: 'error', error: err.message })
     }
-
-
-
 })
 
 //borrar un producto del carrito
