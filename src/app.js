@@ -5,18 +5,19 @@ import mongoose from "mongoose";
 import session from 'express-session'
 import MongoStore from "connect-mongo";
 //----passport----//
-import passport from "passport";    //core de la libreria 
-import initializePassport from "./config/passport.config.js";  // funcion que escribi en config
+import passport from "passport";   
+import initializePassport from "./config/passport.config.js"; 
 //-----Nuevos router despues de Mongoose-------//
 import chatRouter from './routers/chat.router.js'
 import productsRouter from "./routers/products.router.js";
 import cartRouter from "./routers/cart.router.js"
-import viewsNRouter from "./routers/views.router.js";
+import viewsRouter from "./routers/views.router.js";
 import sessionViewsRouter from './routers/sessionviews.router.js'
 import sessionRouter from './routers/session.router.js';
+//-----Variable de entorno-----//
+import config from "./config/config.js";
 
-
-export const PORT = 8080
+export const PORT = config.PORT.PORT
 
 const app = express();
 app.use(express.json());
@@ -24,10 +25,10 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(session ({
   store: MongoStore.create({
-    mongoUrl: "mongodb+srv://coder:coder@cluster0.9dp3egu.mongodb.net/",
-    dbName: "ecommerce"
+    mongoUrl: config.MONGO.URI,
+    dbName: config.MONGO.DB_NAME
   }),
-  secret: 'secret',
+  secret: config.SECRET.SESSION_SECRET,
   resave: true,
   saveUninitialized: true
 }))
@@ -46,15 +47,15 @@ app.use(passport.session())   //inicio la session de passport
 
 try {
   await mongoose.connect(
-    "mongodb+srv://coder:coder@cluster0.9dp3egu.mongodb.net/",
+    config.MONGO.URI,
     {
-      dbName: "ecommerce",
+      dbName: config.MONGO.DB_NAME,
     }
   );
   console.log("DB connected");
   const httpServer = app.listen(PORT, () => console.log("Server up!"));
-  const socketServer = new Server(httpServer);
 
+  const socketServer = new Server(httpServer);
   socketServer.on("connection", (socketClient) => {
     console.log("New Socket connection", socketClient.id);
     socketClient.on("productList", async () => {
@@ -79,8 +80,8 @@ try {
   
   //HtMl On Wire
   app.use('/', sessionViewsRouter)
-  app.use("/products", viewsNRouter);
-  app.use("/carts", viewsNRouter);
+  app.use("/products", viewsRouter);
+  app.use("/carts", viewsRouter);
 
   app.use("/chat", chatRouter);
 } catch (err) {

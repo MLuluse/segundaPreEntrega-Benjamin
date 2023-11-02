@@ -1,9 +1,10 @@
 <div class="table-responsive container my-5">
     <H1>Bienvenido</H1> 
-    <h3>{{user.first_name}} {{user.last_name}} (<a href="/profile">{{user.email}}) </a></h3>
+    <h3>{{user.first_name}} {{user.last_name}} (<a href="/current">{{user.email}}) </a></h3>
     <h3>Role: {{user.role}} </h3>
     <h3 id="cart" data-cid="{{user.cart}}">Su carrito es el: {{user.cart}}</h3>
     <a class="btn btn-primary" href="/api/session/logout">Logout</a> 
+    <a class="btn btn-primary" href="/current">Perfil/Current</a>
     <a class="btn btn-primary" href="/carts/{{user.cart}}">Ver Carrito</a>
     <h2 class="text-center">Productos</h2>
 <hr />
@@ -51,7 +52,6 @@
 
     let cartElement = document.getElementById('cart')
     let cid = cartElement.getAttribute('data-cid')
-
 
         fetch(`/api/carts/${cid}/products/${pid}`, {
             method: 'post'

@@ -4,6 +4,7 @@ import GitHubStrategy from 'passport-github2'
 import { createHash, isValidPassword } from "../utils.js"
 import userModel from "../dao/models/user.model.js"
 import cartModel from "../dao/models/cart.model.js"
+import config from './config.js'
 
 
 const localStrategy = local.Strategy 
@@ -25,7 +26,13 @@ const initializePassport = () => {
             const Cart = await cartModel.create({}) //creo el carrito para el register
 
             const newUser = {
-                first_name, last_name, email, age, password: createHash(password), cart: Cart._id,
+                first_name, 
+                last_name, 
+                email, 
+                age, 
+                password: createHash(password), 
+                cart: Cart._id,
+                role: email === config.ADMIN.EMAIL ? 'admin' : 'user' 
             }
             const result = await userModel.create(newUser)
             return done (null, result)
@@ -39,7 +46,7 @@ const initializePassport = () => {
         usernameField: 'email',
     }, async(username, password, done) => {
         try {
-            if (username === 'adminCoder@coder.com' && password === 'adminCod3r123') {
+           if (username === config.ADMIN.EMAIL && password === config.ADMIN.PASSWORD) {
                 const admin = {
                     _id: 'admin', 
                     first_name: 'Administrador',
@@ -60,9 +67,9 @@ const initializePassport = () => {
 
     //credenciales de terceros
     passport.use('github', new GitHubStrategy({
-        clientID: 'Iv1.055f7754287d5df3', 
-        clientSecret: '44f85f6d2c8c2bb408eb881afa43c7836e48d435',
-        callbackURL: 'http://localhost:8080/api/session/githubcallback'
+        clientID: config.GITHUNSTRATEGY.clientID, 
+        clientSecret: config.GITHUNSTRATEGY.clientSecret,
+        callbackURL: config.GITHUNSTRATEGY.callbackURL
     }, async(accessToken, refreshToken, profile, done) =>{
        // console.log(profile)
         try{

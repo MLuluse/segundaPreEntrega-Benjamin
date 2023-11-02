@@ -1,20 +1,13 @@
-//router para llevar a formunlario de login registro  o perfil
+//router para llevar a formulario de login registro  o perfil
 import {Router} from 'express'
-import { privateRoutes, publicRoutes } from '../middlewares/auth.middleware.js'
+import sessionController from '../controllers/sessionviews.controller.js'
 
 const router = Router()
 
-router.get('/register', async (req, res) => {
+router.get('/register', sessionController.registerPage)
 
-   res.render('sessions/register')
-})
+router.get('/', sessionController.loginPage)
 
-router.get('/', async (req, res) =>{
-    res.render('sessions/login')
-})
-
-router.get('/profile',(req, res) => {
-    res.render('sessions/profile', req.session.user)
-})
+router.get('/current',sessionController.profile)
 
 export default router
