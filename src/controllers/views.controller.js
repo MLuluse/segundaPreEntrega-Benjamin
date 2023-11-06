@@ -1,5 +1,7 @@
-import { getProductsFromDB } from '../controllers/product.controller.js'
-import { getProductsFromCart } from '../controllers/cart.controller.js'
+//import { getProductsFromDB } from '../controllers/product.controller.js'
+//import { getProductsFromCart } from '../controllers/cart.controller.js'
+import {getProductsFromDB} from '../dao/manager/getProductsFromDB.js'
+import getProductsFromCart from '../dao/manager/getProductsFromCart.js'
 import { PORT } from '../app.js'
 
 export const getProductsViewController = async (req, res) => {
