@@ -13,9 +13,9 @@ export const getAll = async (req, res) => {
     }
 } 
 
-export const getProductsById = async (productId) =>{ 
+export const getProductsById = async (pid) =>{ 
     try{
-    const product = await productModel.findById(productId).lean().exec()
+    const product = await productModel.findById(pid).lean().exec()
     return product
     }catch(err){
         return('Error al recibir los productos por ID del manager', err.message)

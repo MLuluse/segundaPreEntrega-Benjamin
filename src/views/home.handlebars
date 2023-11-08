@@ -52,6 +52,8 @@
 
     let cartElement = document.getElementById('cart')
     let cid = cartElement.getAttribute('data-cid')
+    // console.log(cid)
+    //console.log(pid)
 
         fetch(`/api/carts/${cid}/products/${pid}`, {
             method: 'post'
@@ -59,7 +61,7 @@
             .then(result => result.json())
             .then(result => {
                 if (result.status === 'error') throw new Error(result.error)
-                alert(`Ok. Todo salió bien! :)\nEl producto se agregó al carrito con id=${result.payload._id}!`)
+                alert(`Todo salió bien! :)\nEl producto se agregó al carrito con id=${result.payload._id}!`)
             })
             .catch(err => alert(`Ocurrió un error :(\n${err}`))
     }

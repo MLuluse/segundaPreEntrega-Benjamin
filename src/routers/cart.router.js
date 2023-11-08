@@ -1,6 +1,4 @@
 import { createCartController, deleteCartController, deleteProductFromCartController, getCartByIdController,  postProductAndQuantityOnCartIdController, updateCartController, updateProductFromCartController } from '../controllers/cart.controller.js';
-import cartModel from  '../dao/models/cart.model.js'
-import productModel from "../dao/models/product.model.js"
 import { Router } from "express";
 
 const router = Router()

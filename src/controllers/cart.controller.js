@@ -26,10 +26,12 @@ export const postProductAndQuantityOnCartIdController = async (req, res) => {
     const pid = req.params.pid
     const cartToUpdate = await findCartById(cid)
     try {
+        //console.log(`este es el console de cart add ${cartToUpdate}`)
         if (cartToUpdate === null) {
             return res.status(404).json({ status: 'error', error: `Cart with id=${cid} Not found` })
         }
-        const productToAdd = await getProductsById(pid)
+        const productToAdd = await getProductsById({pid})
+        console.log(`este es el console de producto add ${productToAdd}`)
    
         if (productToAdd === null) {
             return res.status(404).json({ status: 'error', error: `Product with id=${pid} Not found` })
@@ -41,6 +43,7 @@ export const postProductAndQuantityOnCartIdController = async (req, res) => {
             cartToUpdate.products.push({ product: pid, quantity: 1 })
         }
         const result = await findAndUpdate(cid, cartToUpdate, { returnDocument: 'after' })
+        console.log(`este es el console de result findandupdate add ${result}`)
         res.status(201).json({ status: 'success', payload: result })
     } catch(err) {
         res.status(500).json({ status: 'error', error: err.message })
