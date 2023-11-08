@@ -43,7 +43,7 @@ export const postProductAndQuantityOnCartIdController = async (req, res) => {
         } else {
             cartToUpdate.products.push({product: pid, quantity: 1})
         }
-        const result = await findAndUpdate(cartToUpdate, { returnDocument: 'after' })
+        const result = await findAndUpdate(cid, cartToUpdate, { returnDocument: 'after' })
         console.log(`este es el console de result findandupdate add ${result}`)
         res.status(201).json({ status: 'success', payload: result })
     } catch(err) {

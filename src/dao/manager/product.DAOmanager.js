@@ -34,7 +34,7 @@ export const createProduct = async (product) => {
 export const printProducts = async () => {
     try{
     const products =  await productModel.find().lean().exec()
-    console.log(products)
+    //console.log(products)
     return products
     }catch(err){
         return('Error al recibir los productos del print manager', err.message)

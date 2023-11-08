@@ -28,10 +28,10 @@ export const findCartById = async (cid) => {
     }
 }
 
-export const findAndUpdate = async (cid) => {
+export const findAndUpdate = async (cid, update) => {
     try{
-        const update = await cartModel.findByIdAndUpdate(cid) 
-        return update
+        const updatedCart = await cartModel.findByIdAndUpdate(cid, update, {new:true}) 
+        return updatedCart
     }catch(err){
         return('Error al encontrar un carrito para actualizar', err.message)
     }
