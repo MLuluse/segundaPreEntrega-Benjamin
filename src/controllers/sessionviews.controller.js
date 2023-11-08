@@ -1,3 +1,5 @@
+import UserDTO from "../dto/user.dto.js"
+
 const sessionController = {}
 
 sessionController.registerPage = async (req, res) => {
@@ -9,7 +11,8 @@ sessionController.loginPage = async (req, res) => {
 }
 
 sessionController.profile = (req, res) => {
-  res.render('sessions/profile', req.session.user)
+  const userDTO = new UserDTO(req.session.user)
+  res.render('sessions/profile', userDTO)
 }
 
 export default sessionController
