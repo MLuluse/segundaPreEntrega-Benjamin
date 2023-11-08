@@ -2,6 +2,7 @@ import cartModel from '../dao/models/cart.model.js'
 import getProductsFromCart from '../dao/manager/getProductsFromCart.js'
 import { getProductsById } from '../dao/manager/product.DAOmanager.js'
 import { createCart, findAndUpdate, findCartById } from '../dao/manager/cart.DAOmanager.js'
+import productModel from '../dao/models/product.model.js'
 
 export const createCartController = async(req, res) => {
     try{
@@ -26,11 +27,11 @@ export const postProductAndQuantityOnCartIdController = async (req, res) => {
     const pid = req.params.pid
     const cartToUpdate = await findCartById(cid)
     try {
-        //console.log(`este es el console de cart add ${cartToUpdate}`)
+        console.log(`este es el console de cart add ${cartToUpdate}`)
         if (cartToUpdate === null) {
             return res.status(404).json({ status: 'error', error: `Cart with id=${cid} Not found` })
         }
-        const productToAdd = await getProductsById({pid})
+        const productToAdd = await productModel.findById(pid)
         console.log(`este es el console de producto add ${productToAdd}`)
    
         if (productToAdd === null) {
@@ -40,9 +41,9 @@ export const postProductAndQuantityOnCartIdController = async (req, res) => {
         if ( productIndex > -1) {
             cartToUpdate.products[productIndex].quantity += 1
         } else {
-            cartToUpdate.products.push({ product: pid, quantity: 1 })
+            cartToUpdate.products.push({product: pid, quantity: 1})
         }
-        const result = await findAndUpdate(cid, cartToUpdate, { returnDocument: 'after' })
+        const result = await findAndUpdate(cartToUpdate, { returnDocument: 'after' })
         console.log(`este es el console de result findandupdate add ${result}`)
         res.status(201).json({ status: 'success', payload: result })
     } catch(err) {

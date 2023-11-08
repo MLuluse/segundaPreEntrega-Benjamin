@@ -31,6 +31,7 @@ export const findCartById = async (cid) => {
 export const findAndUpdate = async (cid) => {
     try{
         const update = await cartModel.findByIdAndUpdate(cid) 
+        return update
     }catch(err){
         return('Error al encontrar un carrito para actualizar', err.message)
     }

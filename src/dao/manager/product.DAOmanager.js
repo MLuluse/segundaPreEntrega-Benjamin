@@ -1,4 +1,4 @@
-
+import mongoose from "mongoose"
 import productModel from "../models/product.model.js"
 import { getProductsFromDB } from "./getProductsFromDB.js"
 
@@ -14,12 +14,12 @@ export const getAll = async (req, res) => {
 } 
 
 export const getProductsById = async (pid) =>{ 
-    try{
+    //try{
     const product = await productModel.findById(pid).lean().exec()
     return product
-    }catch(err){
-        return('Error al recibir los productos por ID del manager', err.message)
-        }
+   //}catch(err){
+       // return('Error al recibir los productos por ID del manager', err.message)
+      //  }
 } 
 
 export const createProduct = async (product) => {
