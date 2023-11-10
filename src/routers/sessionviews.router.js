@@ -8,6 +8,6 @@ router.get('/register', sessionController.registerPage)
 
 router.get('/', sessionController.loginPage)
 
-router.get('/current',sessionController.profile)
+router.get('/current',sessionController.profile)  
 
 export default router
