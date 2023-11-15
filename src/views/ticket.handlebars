@@ -1,0 +1,29 @@
+<body>
+    <h1>Ticket de Compra</h1>
+    <p><strong>Comprador:</strong> {{ticket.purchaser}}</p>
+    <table>
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Precio unitario</th>
+                <th>Cantidad</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Itera sobre los productos en el ticket -->
+            {{#each ticket.products}}
+            <tr>
+                <td>{{this.product}}</td>
+                <td>{{this.price}}</td>
+                <td>{{this.quantity}}</td>
+                <td>{{this.price * this.quantity}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+    <div class="total">
+        <strong>Total: {{ticket.amount}}</strong>
+    </div>
+    <p>¡Gracias por tu compra!</p>
+</body>

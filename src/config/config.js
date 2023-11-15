@@ -25,5 +25,6 @@ export default{
     ADMIN:{
         EMAIL: process.env.ADMIN_EMAIL,
         PASSWORD: process.env.ADMIN_PASSWORD
-    }
+    },
+
 }

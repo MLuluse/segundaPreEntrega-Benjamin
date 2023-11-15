@@ -1,10 +1,7 @@
 <body class="bg-gray-100 h-screen flex flex-col gap-5 justify-center items-center">
-<h1>Chat con socket y handlebars</h1>
-
-    <header>
-        <h1 id="username" class="text-gray-400 text-2xl">
-        </h1>
-    </header>
+<h1>Bienvenido en que puedo ayudarte</h1>
+<h2 id="username">{{user.first_name}}</h2>
+    
     <main class="bg-white p-4 rounded-lg shadow-md w-96">
         <section class="flex mt-1">
             <input type="text" placeholder="Comencemos a chatear..."
@@ -18,7 +15,7 @@
     </main>
 </body>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script><!--este es el cdn de sweetalert para pedir nombre en alerta-->
+<!--<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>este es el cdn de sweetalert para pedir nombre en alerta-->
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="/socket.io/socket.io.js"></script><!--aca hace referencia al socketClient-->
 <script src="chat.js"></script>

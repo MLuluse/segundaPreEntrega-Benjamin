@@ -4,7 +4,10 @@ import mongoosePaginate from 'mongoose-paginate-v2'
 const chatCollection = 'messages'
 
 const chatSchema = new mongoose.Schema({
-    user: String,
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'users'
+    },
     message: String
 })
 

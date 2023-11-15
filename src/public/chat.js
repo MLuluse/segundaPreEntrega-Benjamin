@@ -1,14 +1,6 @@
-Swal.fire({
-    title:'Authentication',
-    input: 'text',
-    text:'Set a username for the chat',
-    inputValidator: value =>{
-        return !value.trim() && 'Please, write a valid username' //esto te pide solo en ok
-    }, 
-    allowOutsideClick: false // esto hace que no funcione si haces click afuera del sweet alert
-}).then(result =>{  // esto va a dar una promesa por eso agarro el resultado con then  y lo asigno a una variable usuario
-    let user = result.value  
-    document.getElementById('username').innerHTML = user
+let userElement = document.getElementById('username');
+let userName = userElement.textContent.trim();
+ 
     let socketClient = io ()  // aca el handshake
 
     let chatbox = document.getElementById('chatbox')
@@ -16,13 +8,10 @@ Swal.fire({
         if(e.key === 'Enter'){
             if(chatbox.value.trim().length > 0) {  // con el trim elimino los espacios en blanco
                 socketClient.emit ('message', { 
-                    user,  // como el user el value que se va a emitir es user, puede solo ponerse user
+                    user: userName,
                     message: chatbox.value 
                 })
                 chatbox.value = ""
-
-
-
             }
         }
     })
@@ -35,4 +24,3 @@ Swal.fire({
         })
         divlogs.innerHTML = messages
     })
-})

@@ -1,12 +1,13 @@
-import cartModel from '../dao/models/cart.model.js'
-import getProductsFromCart from '../dao/manager/getProductsFromCart.js'
-import { getProductsById } from '../dao/manager/product.DAOmanager.js'
-import { createCart, findAndUpdate, findCartById } from '../dao/manager/cart.DAOmanager.js'
-import productModel from '../dao/models/product.model.js'
+import { ProductService } from '../services/services.js'
+import { CartService } from '../services/services.js'
+import { TicketService } from '../services/services.js'
+import { generateRandomCode } from '../utils.js'
+import sendTicketByEmail from '../services/mail.service.js'
+
 
 export const createCartController = async(req, res) => {
     try{
-    const result = await createCart({})
+    const result = await CartService.create({})
     res.status(201).json({status:'success', payload: result})
     }catch(err){
      res.status(500).json({ status: 'error', error: err.message })
@@ -15,7 +16,7 @@ export const createCartController = async(req, res) => {
 
 export const getCartByIdController = async (req, res) => {
     try{
-        const result = await getProductsFromCart(req, res)
+        const result = await CartService.getProductsFromCart(req, res)
         res.status(200).json({status: 'success', payload: result})
     }catch(err){
         res.status(500).json({ status: 'error', error: err.message })
@@ -25,14 +26,14 @@ export const getCartByIdController = async (req, res) => {
 export const postProductAndQuantityOnCartIdController = async (req, res) => {
     const cid = req.params.cid
     const pid = req.params.pid
-    const cartToUpdate = await findCartById(cid)
+    const cartToUpdate = await CartService.findCartById(cid)
     try {
-        console.log(`este es el console de cart add ${cartToUpdate}`)
+        //console.log(`este es el console de cart add ${cartToUpdate}`)
         if (cartToUpdate === null) {
             return res.status(404).json({ status: 'error', error: `Cart with id=${cid} Not found` })
-        }
-        const productToAdd = await productModel.findById(pid)
-        console.log(`este es el console de producto add ${productToAdd}`)
+        }   
+        const productToAdd = await ProductService.getById(pid)
+        //console.log(`este es el console de producto add ${productToAdd}`)
    
         if (productToAdd === null) {
             return res.status(404).json({ status: 'error', error: `Product with id=${pid} Not found` })
@@ -43,8 +44,8 @@ export const postProductAndQuantityOnCartIdController = async (req, res) => {
         } else {
             cartToUpdate.products.push({product: pid, quantity: 1})
         }
-        const result = await findAndUpdate(cid, cartToUpdate, { returnDocument: 'after' })
-        console.log(`este es el console de result findandupdate add ${result}`)
+        const result = await CartService.update(cid, cartToUpdate, { returnDocument: 'after' })
+       //console.log(`este es el console de result findandupdate add ${result}`)
         res.status(201).json({ status: 'success', payload: result })
     } catch(err) {
         res.status(500).json({ status: 'error', error: err.message })
@@ -56,12 +57,12 @@ export const deleteProductFromCartController = async (req, res) => {
     const pid = req.params.pid
     try{
         //verifico si existe el carrito
-        const cartWhereToDelete = await findCartById(cid)
+        const cartWhereToDelete = await CartService.findCartById(cid)
         if(!cartWhereToDelete){
             return res.status(404).json({ status: 'error', error: `El carrito con el id: ${cid} no se encontro` })
         }
         //verfico si exite el producto
-        const productToDelete =  await getProductsById(pid)
+        const productToDelete =  await ProductService.getById(pid)
         if(!productToDelete){
         return res.status(404).json({ status: 'error', error: `El producto con id: ${pid} no encontrado` })
         }
@@ -84,7 +85,7 @@ export const deleteProductFromCartController = async (req, res) => {
 export const updateCartController = async (req, res) => {
     const cid = req.params.cid
     try{
-    const cartToUpdate =  await findCartById(cid)
+    const cartToUpdate =  await CartService.findCartById(cid)
     if(!cartToUpdate){
         return res.status(404).json({ status: 'error', error: `El carrito con el id: ${cid} no se encontro` })
     }
@@ -124,7 +125,7 @@ export const updateProductFromCartController = async (req, res) => {
     const newQuantity = req.body.quantity
     try{
         //veo si exite el carrito
-        const cartToUpdate = await findCartById(cid)
+        const cartToUpdate = await CartService.findCartById(cid)
         if(!cartToUpdate){
             return res.status(404).json({ status: 'error', error: `El carrito con el id: ${cid} no se encontro` })}
 
@@ -151,19 +152,84 @@ export const updateProductFromCartController = async (req, res) => {
 export const deleteCartController = async (req, res) => {
     const cid = req.params.cid;
     try {
-        const cartToDelete = await findCartById(cid);
+        const cartToDelete = await CartService.findCartById(cid)
         if (!cartToDelete) {
-            return res.status(404).json({ status: 'error', error: `El carrito con el id: ${cid} no se encontro` });
+            return res.status(404).json({ status: 'error', error: `El carrito con el id: ${cid} no se encontro` })
         }
 
         // Borrar todos los productos del carrito
-        cartToDelete.products = [];
+        cartToDelete.products = []
 
         // Guardar los cambios en el carrito en la base de datos
-        const result = await cartToDelete.save();
+        const result = await cartToDelete.save()
 
-        return res.status(200).json({ status: 'success', payload: result});
+        return res.status(200).json({ status: 'success', payload: result})
     } catch (err) {
-        res.status(500).json({ status: 'error', error: err.message });
+        res.status(500).json({ status: 'error', error: err.message })
     }
 }
+
+export const purchaseCartController = async (req, res) => {
+    const cid = req.params.cid;
+
+    try {
+        const cart = await CartService.findCartById(cid)
+        if (!cart) {
+            return res.status(404).json({ status: 'error', error: `El carrito con el id: ${cid} no se encontró` });
+        }
+        if (cart.products.length === 0) {
+            return res.status(400).json({ status: 'error', error: 'El carrito está vacío. No se puede realizar la compra.' })
+        }
+
+        let productsToTicket = []
+        let productsInCartAfterBuy = []
+        let amount = 0
+        //stock
+        for (const item of cart.products) {
+            const product = await ProductService.getById(item.product)
+            //console.log(product)
+            if (!product) {
+                return res.status(404).json({ status: 'error', error: `Producto con id: ${item.product} no encontrado` })
+            }
+            if (item.quantity <= product.stock) {
+                // Actualiza el stock del producto
+                const newstock = (product.stock -= item.quantity)
+                console.log(newstock, 'nuevo stock');
+                await ProductService.update(product._id, newstock)
+                // Total del ticket)
+                amount += product.price * item.quantity;
+                // Agregar el producto al ticket 
+                productsToTicket.push({
+                    product: product._id,
+                    price: product.price,
+                    quantity: item.quantity,
+                })
+            } else {
+                // No hay suficiente stock, dejar el producto en el carrito
+                productsInCartAfterBuy.push(item);
+            }
+        }
+            const ticket = await TicketService.createTicket({
+            code: generateRandomCode(10), 
+            products: productsToTicket,
+            amount,
+            purchaser: req.session.user.email 
+        })
+        // Carrito despues de la compra
+        cart.products = productsInCartAfterBuy
+        await cart.save()
+
+        // Envío de correo electrónico después de guardar el carrito
+        const emailResult = await sendTicketByEmail(req.session.user.email, ticket)
+        if (emailResult.success) {
+         res.status(200).json({ status: 'success', payload: ticket, message: emailResult.message })
+        } else {
+         res.status(500).json({ status: 'error', error: emailResult.error })
+        }
+    } catch (err) {
+        res.status(500).json({ status: 'error', error: err.message })
+    }
+}
+
+
+ 

@@ -4,6 +4,6 @@ import { handlePolices } from '../middlewares/auth.middleware.js'
 
 const router = Router()
 
-router.get('/', handlePolices(['USER']) ,chatController)  //este puede usarlo solo un user
+router.get('/', handlePolices(['USER']), chatController)  //este puede usarlo solo un user
 
 export default router

@@ -3,8 +3,9 @@ import local from 'passport-local'
 import GitHubStrategy from 'passport-github2'
 import { createHash, isValidPassword } from "../utils.js"
 import userModel from "../dao/models/user.model.js"
-import cartModel from "../dao/models/cart.model.js"
 import config from './config.js'
+import { UserService } from "../services/services.js"
+import { CartService } from "../services/services.js"
 
 
 const localStrategy = local.Strategy 
@@ -17,13 +18,13 @@ const initializePassport = () => {
     }, async( req, username, password, done ) =>{
         const {first_name, last_name, email, age} = req.body
         try{
-            const user = await userModel.findOne({email: username })
+            const user = await UserService.findUser({email: username })
             if (user){
                 console.log('El usuario ya existe')
                 return done(null, false)
             }
 
-            const Cart = await cartModel.create({}) //creo el carrito para el register
+            const Cart = await CartService.create({}) //creo el carrito para el register
 
             const newUser = {
                 first_name, 
@@ -34,7 +35,8 @@ const initializePassport = () => {
                 cart: Cart._id,
                 role: email === config.ADMIN.EMAIL ? 'admin' : 'user' 
             }
-            const result = await userModel.create(newUser)
+            //console.log('desde adentro delpassport', newUser)
+            const result = await UserService.createUser(newUser)
             return done (null, result)
         }catch(err){
             return done(err)
@@ -56,7 +58,7 @@ const initializePassport = () => {
                 return done(null, admin);
             }
 
-            const user = await userModel.findOne({ email: username })
+            const user = await UserService.findUser({ email: username })
             if (!user) {
                 return done(null, false)
             }
@@ -73,11 +75,11 @@ const initializePassport = () => {
     }, async(accessToken, refreshToken, profile, done) =>{
        // console.log(profile)
         try{
-            const user = await userModel.findOne({email: profile._json.email})
+            const user = await UserService.findUser({email: profile._json.email})
             if (user) return done(null, user) //si ya existe el ususario no lo guarda en base de datos
 
-            const Cart = await cartModel.create({})  //creo el carrito para github
-            const newUser = await userModel.create({
+            const Cart = await CartService.create({})  //creo el carrito para github
+            const newUser = await UserService.createUser({
                 first_name: profile._json.login,
                 last_name: profile._json.name,
                 email: profile._json.email,
@@ -85,6 +87,7 @@ const initializePassport = () => {
                 role: profile._json.type,
                 cart: Cart._id
             })
+            
             return done(null, newUser)
         }catch(err) {
             return done(`Error to login with github ${err}`)
@@ -104,7 +107,7 @@ const initializePassport = () => {
             };
             return done(null, adminUser);
         }
-        const user = await userModel.findById(id)
+        const user = await UserService.findById(id)
         done(null, user)
     })
 
