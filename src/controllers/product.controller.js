@@ -30,7 +30,7 @@ export const postProductOnDBController = async(req, res) => {
     try{
         const newProduct = await ProductService.create(product) 
         const products =  await ProductService.printProducts()
-        req.socketServer.emit('updatedProducts', products)
+       // req.socketServer.emit('updatedProducts', products)
         res.status(201).json({ status: 'success', payload: products})
 
     }catch(err) {
@@ -42,12 +42,12 @@ export const updateProductByIdController = async(req, res) => {
     const productId = req.params.pid
     const info = req.body
     try{
-    const prodactualizado = await ProductService.update({_id: productId},info)
+    const prodactualizado = await ProductService.update( productId,info)
     if (!prodactualizado) {
         return res.status(404).json({ status: 'error', error: 'Not found' })
     }
-    const products = await printProducts()
-    req.socketServer.emit('updatedProducts', products)
+    const products = await ProductService.printProducts()
+    //req.socketServer.emit('updatedProducts', products)
     res.status(200).json({status: 'success', payload: products})
 
     }catch(err){
@@ -58,12 +58,12 @@ export const updateProductByIdController = async(req, res) => {
 export const deleteProductByIdController = async( req, res) =>{
     const productId = req.params.pid
     try{
-        const borrar =  await ProductService.remove({_id:productId})
+        const borrar =  await ProductService.remove(productId)
         if (!borrar) {
             return res.status(404).json({ status: 'error', error: 'no existe el producto a borrar' })
         }
-        const products = await printProducts()
-        req.socketServer.emit('updatedProducts', products)
+        const products = await ProductService.printProducts()
+       // req.socketServer.emit('updatedProducts', products)
         res.status(200).json({status: 'success', payload: products})
  
     }catch(err){

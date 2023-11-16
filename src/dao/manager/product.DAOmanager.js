@@ -89,18 +89,18 @@ const PORT = config.PORT.PORT
         }
 },
 
-    updateProduct : async ({id}, info) => {
+    updateProduct : async (id, info) => {
     try{
-    const prodactualizado = await productModel.updateOne({id},info)
+    const prodactualizado = await productModel.updateOne(id, info)
     return prodactualizado
     }catch(err){
         return('Error al actualizar productos del manager', err.message)
         }
 },
 
-    deleteProduct : async ({id}) => {
+    deleteProduct : async (id) => {
     try{
-    const borrar =  await productModel.findOneAndDelete({id})
+    const borrar =  await productModel.findOneAndDelete(id)
     return borrar
     }catch(err){
         return('Error al actualizar productos del manager', err.message)

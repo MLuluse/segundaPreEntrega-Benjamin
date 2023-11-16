@@ -23,14 +23,14 @@ const sendTicketByEmail = async (destinatario, ticket) => {
       },
     });
 
+    console.log('ticket dentro del service', ticket)
+
     let response = {
       body: {
         intro: "Your ticket details are as follows:",
         table: {
           data: ticket.products.map((product) => ({
-            item: product.title,
-            description: product.description,
-            picture: product.thumbnails,
+            item: product.product,
             price: `$${product.price}`,
             quantity: product.quantity,
           })),

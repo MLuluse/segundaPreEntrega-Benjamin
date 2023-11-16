@@ -1,0 +1,130 @@
+<div class="container">
+    <div class="card mb-5 col-md-6 offset-md-3">
+        <div class="card-header bg-primary text-center text-white">
+            <h1>{{product.title}}</h1>
+            <p>{{product._id}}</p>
+        </div>
+        <div class="card-body">
+            <div class="mb-3"><strong>Description:</strong> {{product.description}}</div>
+            <div class="mb-3"><strong>Price:</strong> {{product.price}}</div>
+            <div class="mb-3"><strong>Code:</strong> {{product.code}}</div>
+            <div class="mb-3"><strong>Category:</strong> {{product.category}}</div>
+            <div class="mb-3"><strong>Stock:</strong> {{product.stock}}</div>
+        </div>
+     <a class="btn btn-primary" href="/products">Lista de productos</a> 
+     <button class="btn btn-danger" onclick="deleteProduct({{product._id}})">Borrar Producto</button> 
+    </div>
+    
+</div>
+<div class="container">
+     <div class="card mb-5 col-md-6 offset-md-3">
+        <div class="card-header bg-primary text-center text-white">
+            <h5>actualizar</h5>
+        </div>
+        <div class="card-body">
+            <form id="productForm">
+                <div class="mb-3">
+                    <input type="text" class="form-control" id="title" placeholder="Title"  />
+                </div>
+                <div class="mb-3">
+                    <input type="text" class="form-control" id="description" placeholder="Description"/>
+                </div>
+                <div class="mb-3">
+                    <input type="number" class="form-control"  id="price"  placeholder="Price" />
+                </div>
+                <div class="mb-3">
+                    <input type="text" class="form-control" id="code" placeholder="Code" />
+                </div>
+                <div class="mb-3">
+                    <input type="text" class="form-control"  id="category" placeholder="Category"/>
+                </div>
+                <div class="mb-3">
+                    <input type="number" class="form-control" name="stock" id="stock" placeholder="Stock" />
+                </div>
+                <div class="mb-3">
+                    <input type="text" class="form-control"  id="thumbnail" placeholder="imagen" />
+                </div>
+                <div class="mb-3">
+                    <input type="text" class="form-control"  id="status" placeholder="true/false" />
+                </div>
+            </form>
+            <button class="btn btn-danger" id="updateButton" onclick="updateProduct({{product._id}})">Actualizar producto</button>
+            <button class="btn btn-danger" id="createButton" onclick="createProduct()">Crear producto</button>
+        </div>
+    </div>
+<script>
+    deleteProduct = (pid) => {
+    fetch(`/api/products/${pid}`, {
+        method: 'delete'
+        })
+        .then(result => result.json())
+        .then(result => {
+            if (result.status === 'error') throw new Error(result.error)
+            alert(`Todo salió bien! :)\nEl producto se borro del db ${result._id}!`)
+            window.location.href = '/products'
+        })
+        .catch(err => alert(`Ocurrió un error :(\n${err}`))
+}
+
+updateProduct = (pid) => {
+       // Obtener el formulario por su ID
+    const form = document.getElementById('productForm');
+
+    // Crear un objeto para almacenar los datos del formulario
+    const formData = {
+        title: form.querySelector('#title').value,
+        description: form.querySelector('#description').value,
+        price: form.querySelector('#price').value,
+        code: form.querySelector('#code').value,
+        category: form.querySelector('#category').value,
+        stock: form.querySelector('#stock').value,
+        thumbnail: form.querySelector('#thumbnail').value,
+        status: form.querySelector('#status').value
+    };
+    fetch(`/api/products/${pid}`, {
+        method: 'put',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+        })
+        .then(result => result.json())
+        .then(result => {
+            if (result.status === 'error') throw new Error(result.error)
+            alert(`Todo salió bien! :)\nEl producto se actualizo en db ${result._id}!`)
+            form.reset()
+        })
+        .catch(err => alert(`Ocurrió un error :(\n${err}`))
+}
+
+createProduct = () => {
+        const form = document.getElementById('productForm');
+
+    // Crear un objeto para almacenar los datos del formulario
+    const formData = {
+        title: form.querySelector('#title').value,
+        description: form.querySelector('#description').value,
+        price: form.querySelector('#price').value,
+        code: form.querySelector('#code').value,
+        category: form.querySelector('#category').value,
+        stock: form.querySelector('#stock').value,
+        thumbnail: form.querySelector('#thumbnail').value,
+        status: form.querySelector('#status').value
+    };
+    fetch(`/api/products`, {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+        })
+        .then(result => result.json())
+        .then(result => {
+            if (result.status === 'error') throw new Error(result.error)
+            alert(`Todo salió bien! se creo un nuevo producto :)!`)
+            form.reset()
+        })
+        .catch(err => alert(`Ocurrió un error :(\n${err}`))
+}
+
+</script>

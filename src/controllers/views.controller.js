@@ -54,11 +54,14 @@ export const cartInfoViewsController = async(req, res) => {
     }
 }
 
-export const purchaseCartController = async(req, res) => {
-    const ticket = await TicketService.findTicket(req, res)
-    if (ticket.statusCode === 200) {
-        res.render('ticket', { ticket: ticket.response.payload })
-    } else {
-        res.status(ticket.statusCode).json({ status: 'error', error: ticket.response.error })
+export const productDetailViewController =  async (req, res) => {
+        const pid = req.params.pid
+        const result = await ProductService.getById(pid)
+        //console.log(result, 'desde el viewcontroller')
+        if (!result) return res.status(404).render({error: 'No pudimos encontrar el producto con este ID!!'})
+        res.status(200).render("product", {product: result})
+
     }
-}
+
+
+

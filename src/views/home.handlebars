@@ -20,6 +20,8 @@
     {{#if paginateInfo.hasNextPage}}
         <a href="{{paginateInfo.nextLink}}">Siguiente</a>
     {{/if}}
+<hr>
+    <td><a class="btn btn-warning" onclick="createProduct('{{this._id}}')">Crear Producto</a></td>
   </div>
 <hr />
     <table class="table table-bordered table-striped table-hover text-center">
@@ -42,7 +44,10 @@
                     <td>{{this.code}}</td>
                     <td>{{this.category}}</td>
                     <td>{{this.stock}}</td>
-                    <td><button class="btn btn-danger" onclick="addProductToCart('{{this._id}}')">Agregar al carrito</button></td>
+                    <td><button class="btn btn-success" onclick="addProductToCart('{{this._id}}')">Agregar al carrito</button></td>
+                    <td><a class="btn btn-danger" onclick="deleteProduct('{{this._id}}')">Borrar</a></td>
+                    <td><a class="btn btn-danger" onclick="updateProduct('{{this._id}}')">Actualizar</a></td>
+                    
                 </tr>
             {{/each}}
         </tbody>
@@ -50,11 +55,12 @@
 </div>
 
 <script>
-  addProductToCart = (pid) => {
+
+addProductToCart = (pid) => {
 
     let cartElement = document.getElementById('cart')
     let cid = cartElement.getAttribute('data-cid')
-    // console.log(cid)
+    //console.log(cid)
     //console.log(pid)
 
         fetch(`/api/carts/${cid}/products/${pid}`, {
@@ -68,5 +74,42 @@
             .catch(err => alert(`Ocurrió un error :(\n${err}`))
     }
 
+deleteProduct = (pid) => {
+    fetch(`/api/products/${pid}`, {
+        method: 'delete'
+        })
+        .then(result => result.json())
+        .then(result => {
+            if (result.status === 'error') throw new Error(result.error)
+            alert(`Todo salió bien! :)\nEl producto se borro del db ${result._id}!`)
+            window.location.href = '/products'
+        })
+        .catch(err => alert(`Ocurrió un error :(\n${err}`))
+}
+
+updateProduct = (pid) => {
+    fetch(`/api/products/${pid}`, {
+        method: 'put'})
+        .then(result => result.json())
+        .then(result => {
+            if (result.status === 'error') throw new Error(result.error)
+            alert(`Todo salió bien! :)\nEl producto se actualizo en db ${result._id}!`)
+            form.reset()
+        })
+        .catch(err => alert(`Ocurrió un error :(\n${err}`))
+}
+createProduct = () => {
+  
+    fetch(`/api/products`, {
+        method: 'post'
+        })
+        .then(result => result.json())
+        .then(result => {
+            if (result.status === 'error') throw new Error(result.error)
+            alert(`Todo salió bien! se creo un nuevo producto :)!`)
+            form.reset()
+        })
+        .catch(err => alert(`Ocurrió un error :(\n${err}`))
+}
 
 </script>

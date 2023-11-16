@@ -187,23 +187,28 @@ export const purchaseCartController = async (req, res) => {
         //stock
         for (const item of cart.products) {
             const product = await ProductService.getById(item.product)
-            //console.log(product)
+            //console.log(product,'dentrot de aca product')
             if (!product) {
                 return res.status(404).json({ status: 'error', error: `Producto con id: ${item.product} no encontrado` })
             }
             if (item.quantity <= product.stock) {
-                // Actualiza el stock del producto
+                
                 const newstock = (product.stock -= item.quantity)
-                console.log(newstock, 'nuevo stock');
+                //console.log(newstock, 'nuevo stock');
+                //console.log('id del producto', product._id)
                 await ProductService.update(product._id, newstock)
-                // Total del ticket)
+                
                 amount += product.price * item.quantity;
                 // Agregar el producto al ticket 
                 productsToTicket.push({
                     product: product._id,
+                    title: product.title,
+                    description: product.description,
                     price: product.price,
                     quantity: item.quantity,
                 })
+
+            //console.log(productsToTicket, 'despues del productstotick')
             } else {
                 // No hay suficiente stock, dejar el producto en el carrito
                 productsInCartAfterBuy.push(item);
@@ -221,6 +226,7 @@ export const purchaseCartController = async (req, res) => {
 
         // Envío de correo electrónico después de guardar el carrito
         const emailResult = await sendTicketByEmail(req.session.user.email, ticket)
+        //console.log('ticket.products', ticket.products)
         if (emailResult.success) {
          res.status(200).json({ status: 'success', payload: ticket, message: emailResult.message })
         } else {
