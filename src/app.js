@@ -17,6 +17,8 @@ import sessionRouter from './routers/session.router.js';
 import mockRouter from './routers/mock.router.js'
 //-----Variable de entorno-----//
 import config from "./config/config.js";
+//middleware
+import errorHandler from './middlewares/error.js'
 
 export const PORT = config.PORT.PORT
 
@@ -87,6 +89,8 @@ try {
   app.use("/chat", chatRouter);
 
   app.use('/mockingproducts', mockRouter);
+  app.use(errorHandler)
+  
 } catch (err) {
   console.log("No pudo conectarse a la DB porque", err.message);
 }
