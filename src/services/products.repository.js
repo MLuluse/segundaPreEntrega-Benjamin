@@ -1,5 +1,5 @@
 const ProductRepository = (dao) => {
-    const getAll = async () => await dao.getAll();
+    const getAll = async (req, res) => await dao.getAll(req, res);
     const getById = async (id) => await dao.getProductsById(id);
     const getAllPaginate = async (req, PORT) => await dao.getProductsPaginate(req, PORT);
     const create = async (product) => await dao.createProduct(product);

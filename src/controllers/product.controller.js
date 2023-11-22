@@ -6,7 +6,7 @@ import { generateErrorInfo } from "../services/errors/info.js"
 //ALL
 export const getAllProductsContoller = async(req, res) =>{
     try{
-    let productos = await ProductService.getAll(req, res)
+    let productos = await ProductService.getAllPaginate(req, res)
     if (!productos || productos.length === 0 ) res.status(404).json({status:'error', payload:'No hay productos para devolver'})
     res.status(200).json({ payload: productos });
 
@@ -29,27 +29,26 @@ export const getProductsByIdController = async(req, res) => {
 
 export const postProductOnDBController = async(req, res) => {
     let {title, description, price, tumbnails, code, category, stock, status} = req.body
-    const product =  {title, description, price, tumbnails, code, category, stock, status}
-    if (!title || !description || !price || !code || !category || !tumbnails || !stock){
-        try{
+    try{
+        const product =  {title, description, price, tumbnails, code, category, stock, status}
+        if (!title || !description || !price || !code || !category || !tumbnails || !stock){
+       
             CustomError.createError({
                 name: "Product creation error",
                 cause: generateErrorInfo(product),
                 message: "Error trying to create a product",
                 code: EErros.INVALID_TYPES_ERROR
-            })
+            })}
+        const newProduct = await ProductService.create(product) 
+        // const products =  await ProductService.printProducts()
+        res.status(201).json({ status: 'success', payload: newProduct})
+
         }catch(err){
             res.status(500).json({status: 'error', error: err.message})
         }
 
     }
-    
-        const newProduct = await ProductService.create(product) 
-        const products =  await ProductService.printProducts()
-       
-        res.status(201).json({ status: 'success', payload: products})
 
-}
 
 export const updateProductByIdController = async(req, res) => {
     const productId = req.params.pid
