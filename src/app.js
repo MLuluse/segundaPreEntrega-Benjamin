@@ -14,6 +14,7 @@ import cartRouter from "./routers/cart.router.js"
 import viewsRouter from "./routers/views.router.js";
 import sessionViewsRouter from './routers/sessionviews.router.js'
 import sessionRouter from './routers/session.router.js';
+import mockRouter from './routers/mock.router.js'
 //-----Variable de entorno-----//
 import config from "./config/config.js";
 
@@ -84,6 +85,8 @@ try {
   app.use("/carts", viewsRouter);
 
   app.use("/chat", chatRouter);
+
+  app.use('/mockingproducts', mockRouter);
 } catch (err) {
   console.log("No pudo conectarse a la DB porque", err.message);
 }
