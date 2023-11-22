@@ -11,7 +11,10 @@ const sendTicketByEmail = async (destinatario, ticket) => {
         user: process.env.MAILER_USER,
         pass: process.env.MAILER_PASS,
       },
-    };
+      tls: {
+        rejectUnauthorized: false,
+      }
+  }
 
     let transporter = nodemailer.createTransport(config);
 
