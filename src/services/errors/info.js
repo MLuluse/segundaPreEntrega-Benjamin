@@ -1,6 +1,5 @@
 //consologuea la explicacion del error, que es lo que falta...
-
-export const generateErrorInfo = (product) => {
+export const generateErrorInfo = product => {
     return `
     Uno o mas properties están incompletos o son inválidos.
     Lista de propiedades obligatorias:
