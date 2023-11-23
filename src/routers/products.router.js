@@ -4,11 +4,11 @@ import { handlePolices } from "../middlewares/auth.middleware.js";
 
 const router = Router()
 
-router.get('/', handlePolices(['USER', 'ADMIN']),getAllProductsContoller)  
+router.get('/', getAllProductsContoller)  
  
 router.get('/:pid', handlePolices(['USER', 'ADMIN']),getProductsByIdController ) 
 
-router.post('/', handlePolices(['ADMIN']),postProductOnDBController ) 
+router.post('/', postProductOnDBController ) 
 
 router.put('/:pid', handlePolices(['ADMIN']),updateProductByIdController )
 

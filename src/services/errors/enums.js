@@ -1,5 +1,4 @@
-// esto es un diccionario de los errores que pueden ocurrir---- este diccionario lo escribe uno
-
+//diccionario
 const EErros = {
     ROUTING_ERROR: 1,
     INVALID_TYPES_ERROR: 2,

@@ -1,7 +1,7 @@
 import { ProductService } from "../services/services.js"
 import CustomError from "../services/errors/costum_error.js"
 import EErros from "../services/errors/enums.js"
-import { generateErrorInfo } from "../services/errors/info.js"
+import  {generateErrorInfo}  from "../services/errors/info.js"
 
 //ALL
 export const getAllProductsContoller = async(req, res) =>{
@@ -27,25 +27,25 @@ export const getProductsByIdController = async(req, res) => {
     }
 }
 
-export const postProductOnDBController = async(req, res) => {
-    let {title, description, price, tumbnails, code, category, stock, status} = req.body
+export const postProductOnDBController = async(req, res) => { 
     try{
-        const product =  {title, description, price, tumbnails, code, category, stock, status}
-        if (!title || !description || !price || !code || !category || !tumbnails || !stock){
-       
-            CustomError.createError({
+        const product = req.body
+        if (!product.title || !product.description || !product.price || !product.code || !product.category || !product.tumbnails || !product.stock){
+       const error = CustomError.createError({
                 name: "Product creation error",
                 cause: generateErrorInfo(product),
                 message: "Error trying to create a product",
                 code: EErros.INVALID_TYPES_ERROR
-            })}
+            })
+        return res.status(404).send(error.message)}
+        else{
         const newProduct = await ProductService.create(product) 
-        // const products =  await ProductService.printProducts()
-        res.status(201).json({ status: 'success', payload: newProduct})
-
-        }catch(err){
-            res.status(500).json({status: 'error', error: err.message})
+        //const products =  await ProductService.printProducts()
+        return res.status(201).json({ status: 'success', payload: newProduct})
         }
+    }catch(err){
+        res.status(500).json({status: 'error', error: err.message})
+    }
 
     }
 
