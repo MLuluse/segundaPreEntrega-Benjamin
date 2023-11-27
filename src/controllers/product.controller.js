@@ -34,7 +34,7 @@ export const postProductOnDBController = async(req, res) => {
        const error = CustomError.createError({
                 name: "Product creation error",
                 cause: generateErrorInfo(product),
-                message: "Error trying to create a product",
+                message: "Error trying to create a product" + generateErrorInfo(product),
                 code: EErros.INVALID_TYPES_ERROR
             })
         return res.status(404).send(error.message)}
