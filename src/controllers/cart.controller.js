@@ -196,7 +196,7 @@ export const purchaseCartController = async (req, res) => {
                 const newstock = (product.stock -= item.quantity)
                 //console.log(newstock, 'nuevo stock');
                 //console.log('id del producto', product._id)
-                await ProductService.update(product._id, newstock)
+                await ProductService.update({_id: product._id}, {stock: newstock})
                 
                 amount += product.price * item.quantity;
                 // Agregar el producto al ticket 
