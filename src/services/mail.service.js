@@ -2,6 +2,8 @@ import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 dotenv.config();
 import Mailgen from 'mailgen';
+import logger from '../utils/logger.js';
+
 
 const sendTicketByEmail = async (destinatario, ticket) => {
   try {
@@ -26,7 +28,7 @@ const sendTicketByEmail = async (destinatario, ticket) => {
       },
     });
 
-    console.log('ticket dentro del service', ticket)
+    logger.info('ticket dentro del service', ticket)
 
     let response = {
       body: {
@@ -54,6 +56,7 @@ const sendTicketByEmail = async (destinatario, ticket) => {
     await transporter.sendMail(message);
     return { success: true, message: 'Email sent successfully' };
   } catch (err) {
+    logger.error('error al generar mail', err)
     return { success: false, error: err.message };
   }
 };

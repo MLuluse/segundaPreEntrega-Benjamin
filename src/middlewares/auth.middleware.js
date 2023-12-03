@@ -1,6 +1,12 @@
+import logger from "../utils/logger.js"
 
 export const privateRoutes = (req, res, next) => {
-    if (req.session.user) return res.redirect('/profile') 
+    const user = req.session.user
+    if (!user) {
+        logger.error(`Usuario ${user} intentó acceder a ruta privada`)
+        return res.status(401).send('Not authorized, you must register first')
+    } return res.redirect('/profile') 
+
         next()
 }
 
@@ -14,6 +20,7 @@ export const handlePolices = policies => (req, res, next) => {
     if (!req.session.user) return res.status(401).json({ status: 'error', error: 'No estas logueado' })
     if (policies.length > 0) {
         if (!policies.includes(req.session.user.role.toUpperCase())) {
+            logger.error('difernete rol quizo quizo cambiar cosas' )
             return res.status(403).json({ status: 'error', error: 'NO estas autorizado chequea tu ROL' })
         }
     }

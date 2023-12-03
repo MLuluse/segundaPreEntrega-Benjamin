@@ -27,4 +27,8 @@ export default{
         PASSWORD: process.env.ADMIN_PASSWORD
     },
 
+    ENV:{
+        ENVIRONMENT: process.env.ENVIRONMENT
+    }
+
 }

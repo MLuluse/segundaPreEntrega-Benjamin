@@ -15,10 +15,12 @@ import viewsRouter from "./routers/views.router.js";
 import sessionViewsRouter from './routers/sessionviews.router.js'
 import sessionRouter from './routers/session.router.js';
 import mockRouter from './routers/mock.router.js'
+import loggerTestRouter from './routers/logger.router.js'
 //-----Variable de entorno-----//
 import config from "./config/config.js";
 //middleware
 import errorHandler from './middlewares/error.js'
+import logger from "./utils/logger.js";
 
 export const PORT = config.PORT.PORT
 
@@ -55,21 +57,21 @@ try {
       dbName: config.MONGO.DB_NAME,
     }
   );
-  console.log("DB connected");
-  const httpServer = app.listen(PORT, () => console.log("Server up!"));
+  logger.info("DB connected");
+  const httpServer = app.listen(PORT, () => logger.info("Server up!"));
 
   const socketServer = new Server(httpServer);
   socketServer.on("connection", (socketClient) => {
-    console.log("New Socket connection", socketClient.id);
+    logger.info("New Socket connection", socketClient.id);
     socketClient.on("productList", async () => {
       const productList = await pm.getProducts();
-      console.log(productList);
+      logger.info(productList);
       socketServer.emit("updatedProducts", productList);
     });
   });
   const messages = [];
   socketServer.on("connection", (socketClient) => {
-    console.log("Socket de chat on");
+    logger.info("Socket de chat on");
     socketClient.on("message", (data) => {
       messages.push(data);
       socketServer.emit("logs", messages);
@@ -89,8 +91,13 @@ try {
   app.use("/chat", chatRouter);
 
   app.use('/mockingproducts', mockRouter);
+
+  app.use('/loggerTest', loggerTestRouter);
+
   app.use(errorHandler)
+
+
   
 } catch (err) {
-  console.log("No pudo conectarse a la DB porque", err.message);
+  logger.error("No pudo conectarse a la DB porque", err.message);
 }

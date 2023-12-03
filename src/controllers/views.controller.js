@@ -1,6 +1,7 @@
 import { ProductService, TicketService } from '../services/services.js'
 import { CartService } from '../services/services.js'
 import { PORT } from '../app.js'
+import logger from '../utils/logger.js'
 
 export const getProductsViewController = async (req, res) => {
     const result = await ProductService.getAllPaginate(req, res)
@@ -29,6 +30,7 @@ export const getProductsViewController = async (req, res) => {
             }
         })
     } else {
+        logger.error("Error al obtener todos los productos")
         res.status(result.statusCode).json({ status: 'error', error: result.response.error })
     }
 }
@@ -39,6 +41,7 @@ export const realtimeProductsViewController = async (req, res) => {
     if (result.statusCode === 200) {
         res.render('realTimeProducts', { products: result.response.payload })
     } else {
+        logger.error("Error al obtener todos los productos realtime")
         res.status(result.statusCode).json({ status: 'error', error: result.response.error })
     }
 }
@@ -58,7 +61,9 @@ export const productDetailViewController =  async (req, res) => {
         const pid = req.params.pid
         const result = await ProductService.getById(pid)
         //console.log(result, 'desde el viewcontroller')
-        if (!result) return res.status(404).render({error: 'No pudimos encontrar el producto con este ID!!'})
+        if (!result) {
+        logger.error("Error al obtener los detalles del producto ACA EL ERROR", err)
+        return res.status(404).render({error: 'No pudimos encontrar el producto con este ID!!'})}
         res.status(200).render("product", {product: result})
 
     }
