@@ -9,7 +9,6 @@ export const getAllProductsContoller = async(req, res) =>{
     try{
     let productos = await ProductService.getAllPaginate(req, res)
     if (!productos || productos.length === 0 ) res.status(404).json({status:'error', payload:'No hay productos para devolver'})
-    logger.debug("¡router.get dataaa desde controller Nueva!")
     res.status(200).json({ payload: productos });
 
 }catch(err){
