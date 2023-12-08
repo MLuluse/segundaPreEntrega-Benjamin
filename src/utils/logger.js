@@ -66,6 +66,6 @@ const createLogger = env => {
 
   
 
-const logger = createLogger(config.ENV.ENVIRONMENT)
+const logger = createLogger(config.ENVIRONMENT.PROD)
 
 export default logger
