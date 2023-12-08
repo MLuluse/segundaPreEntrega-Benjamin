@@ -12,7 +12,7 @@ export const getAllProductsContoller = async(req, res) =>{
     res.status(200).json({ payload: productos });
 
 }catch(err){
-    logger.error('Error al tratar de traer todos los productos', err)
+    logger.error('Error al tratar de traer todos los productos', err.message)
     res.status(500).json({status:'Error', payload: err.message})
 }
 }
@@ -24,7 +24,7 @@ export const getProductsByIdController = async(req, res) => {
     if (!product) return res.status(404).json({ status: "error", payload: "El producto no existe" })
     res.status(200).json({ payload:product})
     }catch (err) {
-        logger.error("Error al leer el producto", err)
+        logger.error("Error al leer el producto", err.message)
         res.status(500).json({status: 'error', error: err.message})
     }
 }
@@ -46,7 +46,7 @@ export const postProductOnDBController = async(req, res) => {
         return res.status(201).json({ status: 'success', payload: newProduct})
         }
     }catch(err){
-        logger.error("Error al crear el producto", err)
+        logger.error("Error al crear el producto", err.message)
         res.status(500).json({status: 'error', error: err.message})
     }
 
@@ -57,7 +57,7 @@ export const updateProductByIdController = async(req, res) => {
     const productId = req.params.pid
     const info = req.body
     try{
-    const prodactualizado = await ProductService.update( productId,info)
+    const prodactualizado = await ProductService.update( productId, info)
     if (!prodactualizado) {
         return res.status(404).json({ status: 'error', error: 'Not found' })
     }
@@ -66,7 +66,7 @@ export const updateProductByIdController = async(req, res) => {
     res.status(200).json({status: 'success', payload: products})
 
     }catch(err){
-        logger.error("Error al actualizar los datos del producto", err)
+        logger.error("Error al actualizar los datos del producto", err.message)
         res.status(500).json({status: 'error', error: err.message})
     }
 }

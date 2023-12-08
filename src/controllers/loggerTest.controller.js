@@ -9,6 +9,6 @@ export const loggerTestController = async (req, res) => {
     logger.error("Error")
     logger.fatal("Fatal")
 
-  res.send('ok',{ status: "success" })
+  res.status(200).send('ok')
 
 }

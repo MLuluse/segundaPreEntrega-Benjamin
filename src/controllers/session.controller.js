@@ -42,7 +42,7 @@ sessionController.failLogin = (req, res) => {
 sessionController.logout = (req, res) => {
   req.session.destroy(err => {
     if (err) {
-      logger.error('error al deslogearse en contoller',err);
+      logger.error('error al deslogearse en contoller', err.message);
       res.status(500).render('error/base', { error: err });
     } else {
       res.redirect('/');
@@ -54,7 +54,6 @@ sessionController.github = passport.authenticate('github', { scope: ['user:email
 
 sessionController.githubCallback = async (req, res) => {
   passport.authenticate('github', { failureRedirect: '/login' })(req, res, () => {
-    logger.debug('Callback: ', req.user);
     req.session.user = req.user;
     res.redirect('/products');
   });

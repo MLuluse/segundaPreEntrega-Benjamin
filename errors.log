@@ -4,3 +4,75 @@
 {"level":"info","message":"Server up!","timestamp":"2023-12-03T21:15:50.000Z"}
 {"level":"info","message":"DB connected","timestamp":"2023-12-03T21:56:05.678Z"}
 {"level":"info","message":"Server up!","timestamp":"2023-12-03T21:56:05.691Z"}
+{"level":"info","message":"DB connected","timestamp":"2023-12-08T18:17:07.577Z"}
+{"level":"info","message":"Server up!","timestamp":"2023-12-08T18:17:07.594Z"}
+{"level":"debug","message":"Debug","timestamp":"2023-12-08T18:17:21.095Z"}
+{"level":"info","message":"DB connected","timestamp":"2023-12-08T18:18:51.003Z"}
+{"level":"info","message":"Server up!","timestamp":"2023-12-08T18:18:51.013Z"}
+{"level":"info","message":"DB connected","timestamp":"2023-12-08T18:19:05.757Z"}
+{"level":"info","message":"Server up!","timestamp":"2023-12-08T18:19:05.771Z"}
+{"level":"info","message":"DB connected","timestamp":"2023-12-08T18:19:13.240Z"}
+{"level":"info","message":"Server up!","timestamp":"2023-12-08T18:19:13.248Z"}
+{"level":"debug","message":"Debug","timestamp":"2023-12-08T18:19:25.621Z"}
+{"level":"http","message":"Http","timestamp":"2023-12-08T18:19:25.623Z"}
+{"level":"info","message":"Info","timestamp":"2023-12-08T18:19:25.625Z"}
+{"level":"warning","message":"Warning","timestamp":"2023-12-08T18:19:25.626Z"}
+{"level":"error","message":"Error","timestamp":"2023-12-08T18:19:25.628Z"}
+{"level":"info","message":"DB connected","timestamp":"2023-12-08T18:21:00.248Z"}
+{"level":"info","message":"Server up!","timestamp":"2023-12-08T18:21:00.260Z"}
+{"level":"info","message":"DB connected","timestamp":"2023-12-08T18:21:31.376Z"}
+{"level":"info","message":"Server up!","timestamp":"2023-12-08T18:21:31.386Z"}
+{"level":"info","message":"DB connected","timestamp":"2023-12-08T18:21:37.619Z"}
+{"level":"info","message":"Server up!","timestamp":"2023-12-08T18:21:37.629Z"}
+{"level":"info","message":"DB connected","timestamp":"2023-12-08T18:22:22.365Z"}
+{"level":"info","message":"Server up!","timestamp":"2023-12-08T18:22:22.374Z"}
+{"level":"info","message":"DB connected","timestamp":"2023-12-08T18:22:39.162Z"}
+{"level":"info","message":"Server up!","timestamp":"2023-12-08T18:22:39.177Z"}
+{"level":"info","message":"DB connected","timestamp":"2023-12-08T18:22:46.433Z"}
+{"level":"info","message":"Server up!","timestamp":"2023-12-08T18:22:46.449Z"}
+{"level":"info","message":"DB connected","timestamp":"2023-12-08T18:22:53.288Z"}
+{"level":"info","message":"Server up!","timestamp":"2023-12-08T18:22:53.305Z"}
+{"level":"info","message":"DB connected","timestamp":"2023-12-08T18:22:59.125Z"}
+{"level":"info","message":"Server up!","timestamp":"2023-12-08T18:22:59.142Z"}
+{"level":"info","message":"DB connected","timestamp":"2023-12-08T18:23:13.768Z"}
+{"level":"info","message":"Server up!","timestamp":"2023-12-08T18:23:13.777Z"}
+{"level":"info","message":"DB connected","timestamp":"2023-12-08T18:23:18.170Z"}
+{"level":"info","message":"Server up!","timestamp":"2023-12-08T18:23:18.184Z"}
+{"level":"info","message":"DB connected","timestamp":"2023-12-08T18:23:23.399Z"}
+{"level":"info","message":"Server up!","timestamp":"2023-12-08T18:23:23.414Z"}
+{"level":"info","message":"DB connected","timestamp":"2023-12-08T18:23:30.602Z"}
+{"level":"info","message":"Server up!","timestamp":"2023-12-08T18:23:30.618Z"}
+{"level":"info","message":"DB connected","timestamp":"2023-12-08T18:23:35.378Z"}
+{"level":"info","message":"Server up!","timestamp":"2023-12-08T18:23:35.392Z"}
+{"level":"info","message":"DB connected","timestamp":"2023-12-08T18:24:09.988Z"}
+{"level":"info","message":"Server up!","timestamp":"2023-12-08T18:24:10.005Z"}
+{"level":"info","message":"DB connected","timestamp":"2023-12-08T18:24:44.597Z"}
+{"level":"info","message":"Server up!","timestamp":"2023-12-08T18:24:44.610Z"}
+{"level":"info","message":"DB connected","timestamp":"2023-12-08T18:24:58.341Z"}
+{"level":"info","message":"Server up!","timestamp":"2023-12-08T18:24:58.354Z"}
+{"level":"info","message":"DB connected","timestamp":"2023-12-08T18:25:07.124Z"}
+{"level":"info","message":"Server up!","timestamp":"2023-12-08T18:25:07.132Z"}
+{"level":"info","message":"DB connected","timestamp":"2023-12-08T18:25:17.575Z"}
+{"level":"info","message":"Server up!","timestamp":"2023-12-08T18:25:17.588Z"}
+{"level":"info","message":"DB connected","timestamp":"2023-12-08T18:25:26.995Z"}
+{"level":"info","message":"Server up!","timestamp":"2023-12-08T18:25:27.004Z"}
+{"level":"info","message":"DB connected","timestamp":"2023-12-08T18:26:05.493Z"}
+{"level":"info","message":"Server up!","timestamp":"2023-12-08T18:26:05.500Z"}
+{"level":"info","message":"DB connected","timestamp":"2023-12-08T18:26:15.530Z"}
+{"level":"info","message":"Server up!","timestamp":"2023-12-08T18:26:15.544Z"}
+{"level":"info","message":"DB connected","timestamp":"2023-12-08T18:27:05.102Z"}
+{"level":"info","message":"Server up!","timestamp":"2023-12-08T18:27:05.113Z"}
+{"level":"info","message":"DB connected","timestamp":"2023-12-08T18:27:39.603Z"}
+{"level":"info","message":"Server up!","timestamp":"2023-12-08T18:27:39.620Z"}
+{"level":"info","message":"DB connected","timestamp":"2023-12-08T18:27:56.403Z"}
+{"level":"info","message":"Server up!","timestamp":"2023-12-08T18:27:56.421Z"}
+{"level":"info","message":"DB connected","timestamp":"2023-12-08T18:28:33.681Z"}
+{"level":"info","message":"Server up!","timestamp":"2023-12-08T18:28:33.689Z"}
+{"level":"info","message":"DB connected","timestamp":"2023-12-08T18:28:38.696Z"}
+{"level":"info","message":"Server up!","timestamp":"2023-12-08T18:28:38.707Z"}
+{"level":"info","message":"DB connected","timestamp":"2023-12-08T18:28:47.762Z"}
+{"level":"info","message":"Server up!","timestamp":"2023-12-08T18:28:47.781Z"}
+{"level":"info","message":"DB connected","timestamp":"2023-12-08T18:28:55.813Z"}
+{"level":"info","message":"Server up!","timestamp":"2023-12-08T18:28:55.828Z"}
+{"level":"info","message":"DB connected","timestamp":"2023-12-08T18:33:10.302Z"}
+{"level":"info","message":"Server up!","timestamp":"2023-12-08T18:33:10.315Z"}

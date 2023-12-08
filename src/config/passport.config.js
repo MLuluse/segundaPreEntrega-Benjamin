@@ -6,6 +6,7 @@ import { createHash, isValidPassword } from "../utils/utils.js"
 import config from './config.js'
 import { UserService } from "../services/services.js"
 import { CartService } from "../services/services.js"
+import logger from "../utils/logger.js"
 
 
 const localStrategy = local.Strategy 
@@ -20,7 +21,7 @@ const initializePassport = () => {
         try{
             const user = await UserService.findUser({email: username })
             if (user){
-                console.log('El usuario ya existe')
+                logger.warning('El usuario ya existe')
                 return done(null, false)
             }
 
@@ -90,6 +91,7 @@ const initializePassport = () => {
             
             return done(null, newUser)
         }catch(err) {
+            logger.error('no  se pudo entrar con github', err.message)
             return done(`Error to login with github ${err}`)
         }
     }))

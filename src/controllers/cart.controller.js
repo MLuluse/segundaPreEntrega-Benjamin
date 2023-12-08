@@ -11,7 +11,7 @@ export const createCartController = async(req, res) => {
     const result = await CartService.create({})
     res.status(201).json({status:'success', payload: result})
     }catch(err){
-        logger.error("Error al crear el carrito:", err)
+        logger.error("Error al crear el carrito:", err.message)
      res.status(500).json({ status: 'error', error: err.message })
     }
 }
@@ -21,7 +21,7 @@ export const getCartByIdController = async (req, res) => {
         const result = await CartService.getProductsFromCart(req, res)
         res.status(200).json({status: 'success', payload: result})
     }catch(err){
-        logger.error("Error en el id del carrito:", err)
+        logger.error("Error en el id del carrito:", err.message)
         res.status(500).json({ status: 'error', error: err.message })
     }
 }
@@ -51,7 +51,7 @@ export const postProductAndQuantityOnCartIdController = async (req, res) => {
        //console.log(`este es el console de result findandupdate add ${result}`)
         res.status(201).json({ status: 'success', payload: result })
     } catch(err) {
-        logger.error('Error al postear un producto al carrito', err)
+        logger.error('Error al postear un producto al carrito', err.message)
         res.status(500).json({ status: 'error', error: err.message })
     }
 }
@@ -81,7 +81,7 @@ export const deleteProductFromCartController = async (req, res) => {
         }
 
     }catch(err){
-        logger.error("Error al borrar un producto del carrito", err)
+        logger.error("Error al borrar un producto del carrito", err.message)
         res.status().json({status: 'error', error: err.message})
     }
 
@@ -119,7 +119,7 @@ export const updateCartController = async (req, res) => {
         const result = await findAndUpdate(cid, cartToUpdate, { returnDocument: 'after' })
         res.status(200).json({ status: 'success', payload: result })
     } catch(err) {
-        logger.error("Error al actualizar el carrito", err)
+        logger.error("Error al actualizar el carrito", err.message)
         res.status(500).json({ status: 'error', error: err.message })
     }
 
@@ -150,7 +150,7 @@ export const updateProductFromCartController = async (req, res) => {
         return res.status(200).json({ status: 'success', message: 'Cantidad del producto actualizada en el carrito', payload });
 
     }catch(err){
-        logger.error("Error al actualizar la cantidad en el carrito", err)
+        logger.error("Error al actualizar la cantidad en el carrito", err.message)
         res.status().json({status: 'error', error: err.message})
     }
 
@@ -161,7 +161,7 @@ export const deleteCartController = async (req, res) => {
     try {
         const cartToDelete = await CartService.findCartById(cid)
         if (!cartToDelete) {
-            logger.erro('no se encontro el carrito con ese id')
+            logger.erro('no se encontro el carrito con ese id', cid)
             return res.status(404).json({ status: 'error', error: `El carrito con el id: ${cid} no se encontro` })
         }
 
@@ -174,7 +174,7 @@ export const deleteCartController = async (req, res) => {
         
         return res.status(200).json({ status: 'success', payload: result})
     } catch (err) {
-        logger.error("Error al borrar el carrito", err)
+        logger.error("Error al borrar el carrito", err.message)
         res.status(500).json({ status: 'error', error: err.message })
     }
 }

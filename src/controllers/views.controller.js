@@ -20,7 +20,8 @@ export const getProductsViewController = async (req, res) => {
         }
 
         const user =  req.session.user
-        console.log(user)
+        //console.log(user)
+        logger.info(user.email)
         res.render('home', { user, products: result.response.payload, paginateInfo: {
                 hasPrevPage: result.response.hasPrevPage,
                 hasNextPage: result.response.hasNextPage,
@@ -30,7 +31,7 @@ export const getProductsViewController = async (req, res) => {
             }
         })
     } else {
-        logger.error("Error al obtener todos los productos")
+        logger.error("Error al obtener todos los productos", error.message)
         res.status(result.statusCode).json({ status: 'error', error: result.response.error })
     }
 }
@@ -41,7 +42,7 @@ export const realtimeProductsViewController = async (req, res) => {
     if (result.statusCode === 200) {
         res.render('realTimeProducts', { products: result.response.payload })
     } else {
-        logger.error("Error al obtener todos los productos realtime")
+        logger.error("Error al obtener todos los productos realtime", error.message)
         res.status(result.statusCode).json({ status: 'error', error: result.response.error })
     }
 }
@@ -62,7 +63,7 @@ export const productDetailViewController =  async (req, res) => {
         const result = await ProductService.getById(pid)
         //console.log(result, 'desde el viewcontroller')
         if (!result) {
-        logger.error("Error al obtener los detalles del producto ACA EL ERROR", err)
+        logger.error("Error al obtener los detalles del producto", error.message)
         return res.status(404).render({error: 'No pudimos encontrar el producto con este ID!!'})}
         res.status(200).render("product", {product: result})
 
