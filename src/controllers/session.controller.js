@@ -118,7 +118,8 @@ sessionController.exchangeRole = async (req, res) => {
   try {
       const user = await UserService.findById(req.params.uid)
       await UserService.findAndUpdate(req.params.uid, { role: user.role === 'user' ? 'premium' : 'user' })
-      res.json({ status: 'success', message: 'Se ha actualizado el rol del usuario' })
+      res.render('sessions/profile')
+      //res.json({ status: 'success', message: 'Se ha actualizado el rol del usuario' })
   } catch(err) {
       res.json({ status: 'error', error: err.message })
   }

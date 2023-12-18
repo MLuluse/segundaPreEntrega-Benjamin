@@ -4,13 +4,13 @@ import { handlePolices } from "../middlewares/auth.middleware.js"
 
 const router = Router()
 
-router.get('/' , handlePolices(['USER', 'ADMIN']),getProductsViewController)
+router.get('/' , handlePolices(['USER', 'ADMIN', 'PREMIUM']),getProductsViewController)
 
-router.get('/realtimeproducts', handlePolices(['USER', 'ADMIN']),realtimeProductsViewController)
+router.get('/realtimeproducts', handlePolices(['USER', 'ADMIN','PREMIUM']),realtimeProductsViewController)
 
-router.get('/:cid', handlePolices(['USER', 'ADMIN']),cartInfoViewsController)
+router.get('/:cid', handlePolices(['USER', 'ADMIN', 'PREMIUM']),cartInfoViewsController)
 
-router.get('/product/:pid', handlePolices(['USER', 'ADMIN']), productDetailViewController)
+router.get('/product/:pid', handlePolices(['USER', 'ADMIN', 'PREMIUM']), productDetailViewController)
 
 
 export default router

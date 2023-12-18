@@ -6,11 +6,11 @@ const router = Router()
 
 router.post('/', createCartController)
 
-router.get('/:cid', handlePolices(['USER']),getCartByIdController) //user
+router.get('/:cid', handlePolices(['USER', 'PREMIUM']),getCartByIdController) 
 
-router.post('/:cid/products/:pid', handlePolices(['USER', 'PREMIUM']),postProductAndQuantityOnCartIdController ) //este puede solo usarlo un user
+router.post('/:cid/products/:pid', handlePolices(['USER', 'PREMIUM']),postProductAndQuantityOnCartIdController ) 
 
-router.delete('/:cid/products/:pid', handlePolices(['USER']),deleteProductFromCartController) //este solo un user 
+router.delete('/:cid/products/:pid', handlePolices(['USER', 'PREMIUM']),deleteProductFromCartController) //este solo un user 
 
 router.put('/:cid', updateCartController)
 
