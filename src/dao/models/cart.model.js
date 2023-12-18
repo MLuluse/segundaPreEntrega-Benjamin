@@ -8,11 +8,8 @@ const cartSchema = new mongoose.Schema({
         type: [{
             _id:false,
             //aca la refe para que llame a los productos dentro del carrito
-            product: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'products'
-            },
-        quantity: Number
+            product: { type: mongoose.Schema.Types.ObjectId, ref: 'products'},
+            quantity: Number
         }],
         default: []
     }

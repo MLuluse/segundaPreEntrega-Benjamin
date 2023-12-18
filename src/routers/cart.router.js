@@ -8,7 +8,7 @@ router.post('/', createCartController)
 
 router.get('/:cid', handlePolices(['USER']),getCartByIdController) //user
 
-router.post('/:cid/products/:pid', handlePolices(['USER']),postProductAndQuantityOnCartIdController ) //este puede solo usarlo un user
+router.post('/:cid/products/:pid', handlePolices(['USER', 'PREMIUM']),postProductAndQuantityOnCartIdController ) //este puede solo usarlo un user
 
 router.delete('/:cid/products/:pid', handlePolices(['USER']),deleteProductFromCartController) //este solo un user 
 

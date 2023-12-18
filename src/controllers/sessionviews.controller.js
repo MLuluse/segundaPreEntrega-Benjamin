@@ -15,4 +15,12 @@ sessionController.profile = (req, res) => {
   res.render('sessions/profile', userDTO)
 }
 
+sessionController.forgetPass = (req, res) =>{
+  res.render('sessions/forgetPassword')
+}
+
+sessionController.resetPass = (req, res) => {
+  res.redirect(`/api/session/verify-token/${req.params.token}`)
+}
+
 export default sessionController

@@ -6,7 +6,7 @@ export const createHash = password => bcrypt.hashSync(password, bcrypt.genSaltSy
 
 //helper function---> esta sirve para loguear una usuario... compara la contraseña
 export const isValidPassword = (user, password) => bcrypt.compareSync(password, user.password)
-
+ 
 //generador de CODIGO ALEATORIO PARA TICKET
 export const generateRandomCode = (length) => {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

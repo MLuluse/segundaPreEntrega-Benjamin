@@ -12,7 +12,8 @@ const productSchema = new mongoose.Schema({
     code: {type: Number, required: true, unique: true},
     category: {type: String, require: true},
     status: {type: Boolean, default: true},
-    stock: {type: Number, required: true}
+    stock: {type: Number, required: true},
+    owner: { type: String, required: true, default: 'admin', ref: "users" }
 })
 
 //permite consultas menos estrictas en mongoose

@@ -33,14 +33,19 @@ export const postProductAndQuantityOnCartIdController = async (req, res) => {
     try {
         //console.log(`este es el console de cart add ${cartToUpdate}`)
         if (cartToUpdate === null) {
-            return res.status(404).json({ status: 'error', error: `Cart with id=${cid} Not found` })
+            return res.status(404).json({ status: 'error', error: `Carrito con id=${cid} no encontrado` })
         }   
         const productToAdd = await ProductService.getById(pid)
         //console.log(`este es el console de producto add ${productToAdd}`)
    
         if (productToAdd === null) {
-            return res.status(404).json({ status: 'error', error: `Product with id=${pid} Not found` })
+            return res.status(404).json({ status: 'error', error: `Producto con id=${pid} no encontrado` })
         }
+        //cheuqueo que el que va a agregar no sea el owner
+        if (productToAdd.owner === req.session.user.email){
+            return res.status(400).json ({status:error, error: 'No podes agregar tu propio producto'})
+        } 
+
         const productIndex = cartToUpdate.products.findIndex(item => item.product == pid)
         if ( productIndex > -1) {
             cartToUpdate.products[productIndex].quantity += 1

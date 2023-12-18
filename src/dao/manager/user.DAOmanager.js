@@ -13,7 +13,14 @@ const userDAO = {
     create : async (data) => {
         const create = await userModel.create(data)
         return create
+    },
+
+    findAndUpdate : async(id, data) => {
+        const findandupdate = await userModel.findByIdAndUpdate(id, data)
+        return findandupdate
     }
+
+
 }
 
 export default userDAO

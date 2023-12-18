@@ -30,27 +30,26 @@ export const getProductsByIdController = async(req, res) => {
 }
 
 export const postProductOnDBController = async(req, res) => { 
+    if (!req.body.title || !req.body.description || !req.body.price || !req.body.code || !req.body.category || !req.body.tumbnails || !req.body.stock){
+       CustomError.createError({
+            name: "Product creation error",
+            cause: generateErrorInfo(req.body),
+            message: "Error trying to create a product" + generateErrorInfo(req.body),
+            code: EErros.INVALID_TYPES_ERROR
+            })
+        }
     try{
         const product = req.body
-        if (!product.title || !product.description || !product.price || !product.code || !product.category || !product.tumbnails || !product.stock){
-       const error = CustomError.createError({
-                name: "Product creation error",
-                cause: generateErrorInfo(product),
-                message: "Error trying to create a product" + generateErrorInfo(product),
-                code: EErros.INVALID_TYPES_ERROR
-            })
-        return res.status(404).send(error.message)}
-        else{
+        product.owner = req.session.user.email
         const newProduct = await ProductService.create(product) 
         //const products =  await ProductService.printProducts()
-        return res.status(201).json({ status: 'success', payload: newProduct})
-        }
+        return res.status(201).json({ status: 'success', payload: newProduct})   
     }catch(err){
         logger.error("Error al crear el producto", err.message)
         res.status(500).json({status: 'error', error: err.message})
     }
+}
 
-    }
 
 
 export const updateProductByIdController = async(req, res) => {
@@ -72,8 +71,14 @@ export const updateProductByIdController = async(req, res) => {
 }
 
 export const deleteProductByIdController = async( req, res) =>{
-    const productId = req.params.pid
     try{
+        const productId = req.params.pid
+        if (req.session.user.role === 'premium'){
+            const product = await ProductService.getById(productId)
+            if(product.owner !== req.session.user.email){
+                return res.status(403).json({status: 'error', error: 'No esta autorizado a borrar el producto'})
+            } 
+        }
         const borrar =  await ProductService.remove(productId)
         if (!borrar) {
             return res.status(404).json({ status: 'error', error: 'no existe el producto a borrar' })

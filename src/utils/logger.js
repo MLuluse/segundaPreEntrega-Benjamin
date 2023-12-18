@@ -14,8 +14,8 @@ const customWinstonLevels = {
     },
     colors: {
         debug: 'white',
-        http: 'green',
-        info: 'blue',
+        http: 'blue',
+        info: 'green',
         warning: 'yellow',
         error: 'magenta',
         fatal: 'red'

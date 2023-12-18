@@ -9,11 +9,8 @@ const userSchema = new mongoose.Schema({
     email: {type: String, unique:true},
     age: Number,
     password: String,
-    cart: {
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'carts'
-    },
-    role: {type: String, default:'user'}
+    cart: {type: mongoose.Schema.Types.ObjectId,  ref: 'carts'},
+    role: {type: String, enum: ['user', 'admin', 'premium'], default:'user'} //enum marca que solo puede recibir esos valores
 })
 
 mongoose.set('strictQuery', false)
