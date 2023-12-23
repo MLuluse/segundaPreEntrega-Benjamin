@@ -53,16 +53,22 @@ export const postProductOnDBController = async(req, res) => {
 
 
 export const updateProductByIdController = async(req, res) => {
+    try{
     const productId = req.params.pid
     const info = req.body
-    try{
-    const prodactualizado = await ProductService.update( productId, info)
-    if (!prodactualizado) {
+    if (req.session.user.role === 'premium') {
+        const product = await ProductService.getById(productId)
+        if (product.owner !== req.session.user.email) {
+            return res.status(403).json({ status: 'error', error: 'No estas autorizado'})
+        }}
+
+    const updatedProducts = await ProductService.update(productId, info, { new: true })
+    if (!updatedProducts) {
         return res.status(404).json({ status: 'error', error: 'Not found' })
     }
     const products = await ProductService.printProducts()
     //req.socketServer.emit('updatedProducts', products)
-    res.status(200).json({status: 'success', payload: products})
+    res.status(201).json({status: 'success', payload: products})
 
     }catch(err){
         logger.error("Error al actualizar los datos del producto", err.message)
@@ -73,21 +79,21 @@ export const updateProductByIdController = async(req, res) => {
 export const deleteProductByIdController = async( req, res) =>{
     try{
         const productId = req.params.pid
-        if (req.session.user.role === 'premium'){
-            const product = await ProductService.getById(productId)
-            if(product.owner !== req.session.user.email){
-                return res.status(403).json({status: 'error', error: 'No esta autorizado a borrar el producto'})
-            } 
+        const userInfo = {email: req.session.user.email, role: req.session.user.role}
+
+        const product = await ProductService.getById(productId)
+        //console.log(product)
+        if (!product) {
+            return res.status(404).json({ error: 'Producto no encontrado en la base de datos' })
         }
-        const borrar =  await ProductService.remove(productId)
-        if (!borrar) {
-            return res.status(404).json({ status: 'error', error: 'no existe el producto a borrar' })
-        }
+        if (userInfo.role === 'admin' || product.owner === userInfo.email) {
+            const deleteProduct = await ProductService.remove(product)
+            if (!deleteProduct)  return res.status(404).json({ error: `Producto con ID: '${product}' no encontrado` })
+      
         const products = await ProductService.printProducts()
-       // req.socketServer.emit('updatedProducts', products)
         res.status(200).json({status: 'success', payload: products})
- 
-    }catch(err){
+    } }
+    catch(err){
         logger.error(`Error al eliminar el producto", ${err.message}`)
         res.status(500).json({status: 'error', error: err.message})
     }

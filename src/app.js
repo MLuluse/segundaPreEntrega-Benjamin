@@ -16,6 +16,7 @@ import sessionViewsRouter from './routers/sessionviews.router.js'
 import sessionRouter from './routers/session.router.js';
 import mockRouter from './routers/mock.router.js'
 import loggerTestRouter from './routers/logger.router.js'
+import usersRouter from './routers/users.router.js'
 //-----Variable de entorno-----//
 import config from "./config/config.js";
 //middleware
@@ -82,6 +83,7 @@ try {
   app.use("/api/products", productsRouter);
   app.use("/api/carts", cartRouter);
   app.use("/api/session", sessionRouter);
+  app.use("/api/users", usersRouter)
   
   //HtMl On Wire
   app.use('/', sessionViewsRouter)

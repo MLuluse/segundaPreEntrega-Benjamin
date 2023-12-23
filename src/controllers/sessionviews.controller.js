@@ -23,4 +23,8 @@ sessionController.resetPass = (req, res) => {
   res.redirect(`/api/session/verify-token/${req.params.token}`)
 }
 
+sessionController.createUpdate = (req, res) => {
+  res.render('createUpdate')
+}
+
 export default sessionController

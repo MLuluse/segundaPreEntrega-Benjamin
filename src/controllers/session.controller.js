@@ -31,6 +31,7 @@ sessionController.login = (req, res) => {
       return res.status(400).send({ status: 'error', error: 'Invalid credentials' });
     }
     req.session.user = {
+      id: req.user._id,
       first_name: req.user.first_name,
       last_name: req.user.last_name,
       email: req.user.email,
@@ -116,7 +117,9 @@ sessionController.resetPass = async (req, res) => {
 
 sessionController.exchangeRole = async (req, res) => {
   try {
-      const user = await UserService.findById(req.params.uid)
+      const id = req.params.uid
+      const user = await UserService.findById(id)
+      console.log('info de user',user)
       await UserService.findAndUpdate(req.params.uid, { role: user.role === 'user' ? 'premium' : 'user' })
       res.render('sessions/profile')
       //res.json({ status: 'success', message: 'Se ha actualizado el rol del usuario' })

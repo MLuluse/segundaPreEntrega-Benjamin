@@ -2,6 +2,7 @@
     <H1>Bienvenido</H1> 
     <h3>{{user.first_name}} {{user.last_name}} (<a href="/current">{{user.email}}) </a></h3>
     <h3>Role: {{user.role}} </h3>
+    <!--<h3>id: {{user.id}} </h3>-->
     <h3 id="cart" data-cid="{{user.cart}}">Su carrito es el: {{user.cart}}</h3>
     <a class="btn btn-primary" href="/api/session/logout">Logout</a> 
     <a class="btn btn-primary" href="/current">Perfil/Current</a>
@@ -21,7 +22,7 @@
         <a href="{{paginateInfo.nextLink}}">Siguiente</a>
     {{/if}}
 <hr>
-    <td><a class="btn btn-warning" onclick="createProduct('{{this._id}}')">Crear Producto</a></td>
+    <td><a class="btn btn-warning" href="/create-update">Crear Producto</a></td>
   </div>
 <hr />
     <table class="table table-bordered table-striped table-hover text-center">
@@ -46,7 +47,7 @@
                     <td>{{this.stock}}</td>
                     <td><button class="btn btn-success" onclick="addProductToCart('{{this._id}}')">Agregar al carrito</button></td>
                     <td><a class="btn btn-danger" onclick="deleteProduct('{{this._id}}')">Borrar</a></td>
-                    <td><a class="btn btn-danger" onclick="updateProduct('{{this._id}}')">Actualizar</a></td>
+                    <td><a class="btn btn-danger" href="/products/product/{{this._id}}">Actualizar</a></td>
                     
                 </tr>
             {{/each}}
@@ -86,30 +87,4 @@ deleteProduct = (pid) => {
         })
         .catch(err => alert(`Ocurrió un error :(\n${err}`))
 }
-
-updateProduct = (pid) => {
-    fetch(`/api/products/${pid}`, {
-        method: 'put'})
-        .then(result => result.json())
-        .then(result => {
-            if (result.status === 'error') throw new Error(result.error)
-            alert(`Todo salió bien! :)\nEl producto se actualizo en db ${result._id}!`)
-            form.reset()
-        })
-        .catch(err => alert(`Ocurrió un error :(\n${err}`))
-}
-createProduct = () => {
-  
-    fetch(`/api/products`, {
-        method: 'post'
-        })
-        .then(result => result.json())
-        .then(result => {
-            if (result.status === 'error') throw new Error(result.error)
-            alert(`Todo salió bien! se creo un nuevo producto :)!`)
-            form.reset()
-        })
-        .catch(err => alert(`Ocurrió un error :(\n${err}`))
-}
-
 </script>

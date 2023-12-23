@@ -101,7 +101,7 @@ export const restorePasswordMail = async (destinatario, token) => {
 let message = {
     from: 'Coder Shop',
     to: destinatario,
-    subject: 'Link para recetaer tu password',
+    subject: 'Link para reset de tu password',
     html: mail
 }
     await transporter.sendMail(message)

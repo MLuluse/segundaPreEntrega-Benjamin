@@ -6,7 +6,7 @@ const router = Router()
 
 router.get('/', handlePolices(['USER', 'ADMIN', 'PREMIUM']), getAllProductsContoller)  
  
-router.get('/:pid', handlePolices(['USER', 'ADMIN']),getProductsByIdController ) 
+router.get('/:pid', handlePolices(['USER', 'ADMIN', 'PREMIUM']),getProductsByIdController ) 
 
 router.post('/', handlePolices(['PREMIUM', 'ADMIN']),postProductOnDBController ) 
 

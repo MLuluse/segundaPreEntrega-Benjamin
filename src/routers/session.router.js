@@ -24,6 +24,6 @@ router.get('/verify-token/:token', sessionController.verifyToken)
 
 router.post('/reset-password/:user', sessionController.resetPass)
 
-router.get('/premium/:uid', sessionController.exchangeRole)
+
 
 export default router

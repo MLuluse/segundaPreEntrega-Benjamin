@@ -1,28 +1,12 @@
 <div class="container">
+    <h2 class="text-center mb-4">Actualizar-Crear Producto</h2>
+    <hr />
     <div class="card mb-5 col-md-6 offset-md-3">
         <div class="card-header bg-primary text-center text-white">
-            <h1>{{product.title}}</h1>
-            <p id="pid" data-pid="{{product._id}}">{{product._id}}</p>
+            <h5>Create/Update</h5>
         </div>
         <div class="card-body">
-            <div class="mb-3"><strong>Description:</strong> {{product.description}}</div>
-            <div class="mb-3"><strong>Price:</strong> {{product.price}}</div>
-            <div class="mb-3"><strong>Code:</strong> {{product.code}}</div>
-            <div class="mb-3"><strong>Category:</strong> {{product.category}}</div>
-            <div class="mb-3"><strong>Stock:</strong> {{product.stock}}</div>
-        </div>
-     <a class="btn btn-primary" href="/products">Lista de productos</a> 
-     <button class="btn btn-danger" onclick="deleteProduct('{{product._id}}')">Borrar Producto</button> 
-    </div>
-    
-</div>
-<div class="container">
-     <div class="card mb-5 col-md-6 offset-md-3">
-        <div class="card-header bg-primary text-center text-white">
-            <h5>actualizar</h5>
-        </div>
-        <div class="card-body">
-            <form id="productForm">
+            <form id="form">
                 <div class="mb-3">
                     <input type="text" class="form-control" id="title" placeholder="Title"  />
                 </div>
@@ -33,13 +17,13 @@
                     <input type="number" class="form-control"  id="price"  placeholder="Price" />
                 </div>
                 <div class="mb-3">
-                    <input type="text" class="form-control" id="code" placeholder="Code" />
+                    <input type="text" class="form-control" id="code" placeholder="Code Number" />
                 </div>
                 <div class="mb-3">
                     <input type="text" class="form-control"  id="category" placeholder="Category"/>
                 </div>
                 <div class="mb-3">
-                    <input type="number" class="form-control"  id="stock" placeholder="Stock" />
+                    <input type="number" class="form-control" name="stock" id="stock" placeholder="Stock" />
                 </div>
                 <div class="mb-3">
                     <input type="text" class="form-control"  id="thumbnail" placeholder="imagen" />
@@ -48,14 +32,14 @@
                     <input type="text" class="form-control"  id="status" placeholder="true/false" />
                 </div>
             </form>
-            <button class="btn btn-danger" id="updateProduct" onclick="updateProduct('{{product._id}}')"> Actualizar producto </button>
-           
+            <button class="btn btn-success " id="createProduct" >Agregar Producto</button>
         </div>
     </div>
+    <hr />
+</div>
 <script>
-updateProduct = (pid) => {
-    const form = document.getElementById('productForm');
-    const formData = {       
+document.getElementById('createProduct').addEventListener('click', () =>{
+    const product = {       
         title: document.getElementById("title").value,
         description: document.getElementById("description").value,
         price: document.getElementById("price").value,
@@ -65,6 +49,49 @@ updateProduct = (pid) => {
         thumbnail: document.getElementById("thumbnail").value,
         status: document.getElementById("status").value 
         }
+
+        //ruta que crea el producto
+    fetch("/api/products", {
+        method: "post",
+        body: JSON.stringify(product),
+        headers: {
+            "Content-Type": "application/json",
+        }
+    })
+    .then (result => result.json())
+    .then (result => {
+        if (result.status === 'error') throw new Error(result.error)
+    })  
+    .then (() => fetch('/api/products'))
+    .then (result => result.json())
+    .then ( result => {
+        if ( result.status === 'error')throw new Error(result.error)
+        alert(`Nuevo producto agregado`)
+        window.location.href = '/products'
+    })
+    .catch(error => {
+        console.log (`Error en la subida de producto`)
+    } )
+})
+
+
+
+let updateProduct = (pid) => {
+       // Obtener el formulario por su ID
+    const form = document.getElementById('form');
+
+    // Crear un objeto para almacenar los datos del formulario
+    const formData = {
+        title: form.querySelector('#title').value,
+        description: form.querySelector('#description').value,
+        price: form.querySelector('#price').value,
+        code: form.querySelector('#code').value,
+        category: form.querySelector('#category').value,
+        stock: form.querySelector('#stock').value,
+        thumbnail: form.querySelector('#thumbnail').value,
+        status: form.querySelector('#status').value
+    };
+    console.log('formData update',fromData)
     fetch(`/api/products/${pid}`, {
         method: 'put',
         headers: {
@@ -74,25 +101,12 @@ updateProduct = (pid) => {
         })
         .then(result => result.json())
         .then(result => {
+            console.log('result put', result)
             if (result.status === 'error') throw new Error(result.error)
-            alert(`Todo salió bien! :)\nEl producto se actualizo en db`)
-            window.location.href = '/products'
+            alert(`Todo salió bien! :)\nEl producto se actualizo en db ${result._id}!`)
+            form.reset()
         })
         .catch(err => alert(`Ocurrió un error :(\n${err}`))
 }
-
-deleteProduct = (pid) => {
-    fetch(`/api/products/${pid}`, {
-        method: 'delete'
-        })
-    .then(result => result.json())
-    .then(result => {
-        if (result.status === 'error') throw new Error(result.error)
-        alert(`Todo salió bien! :)\nEl producto se borro del db!`)
-        window.location.href = '/products'
-    })
-    .catch(err => alert(`Ocurrió un error :(\n${err}`))
-}
-
 
 </script>
