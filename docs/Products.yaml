@@ -1,0 +1,120 @@
+paths:
+  /api/products:
+    get:
+      summary: Obtiene todos los prodcutos de la base de datos
+      tags: 
+        - Products
+      responses:
+        "200":
+          description: Los productos fueron obtenidos satisfactoriamente de la DB
+        "500":
+          description: Error al tratar de traer todos los productos
+
+    post:
+      summary: Crear un nuevo producto
+      tags:
+        - Products
+      requestBody:
+        description: Datos del nuevo producto
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Product"
+      responses:
+        "201":
+          description: Producto creado con éxito.
+        "500":
+          description: Error del servidor. No se pudo crear el producto.
+
+  /api/products/{pid}:
+    get:
+      summary: Obtener un producto por ID
+      tags:
+        - Products
+      responses:
+        "200":
+          description: Éxito. Devuelve el producto solicitado.
+        "404":
+          description: Producto no encontrado.
+        "500":
+          description: Error al leer el producto
+
+    put:
+      summary: Actualizar un producto por ID
+      tags:
+        - Products
+      description: Nuevos datos del producto
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Product"
+      responses:
+        "201":
+          description: Producto actualizado con éxito.
+        "403":
+          description: No esta autorizado a modificar el producto
+        "404":
+          description: Producto no encontrado.
+        "500":
+          description: Error del servidor. No se pudo actualizar el producto.
+
+    delete:
+      summary: Eliminar un producto por ID
+      responses:
+       "200":
+          description: Producto eliminado con éxito
+       "404":
+          description: Producto no encontrado en la DB
+       "500":
+          description: Error del servidor. No se pudo eliminar el producto
+
+
+
+components:
+    schemas:
+        Product:
+            type: object
+            properties:
+                _id: 
+                    type: objectId
+                    description: Id autogenerado por MongoDB
+                title:
+                    type: string
+                    description: Nombre del producto
+                description:
+                    type: string
+                    description: Descripcion del producto
+                price:
+                    type: number
+                    description: Precio del producto
+                thumbnails:
+                    type: array
+                    items:
+                        type: string
+                    description: Arreglo de fotos del Producto
+                code:
+                    type: number
+                    description: Codigo del producto debe ser unico e irrepetible
+                stock:
+                    type: number
+                    description: Cantidad  que hay del producto               
+                category:
+                    type: string
+                    description: Categoria a la que pertenece el producto
+                status:
+                    type: boolean
+                    description: Status true = activo, false = desactivado
+                owner:
+                    type: string
+                    description: Propietario del producto, por defecto administrador, pero puede ser un user Premium
+            required:
+                - title
+                - description
+                - price
+                - code
+                - stock
+                - category
+                - owner
+          

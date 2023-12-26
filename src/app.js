@@ -7,6 +7,20 @@ import MongoStore from "connect-mongo";
 //----passport----//
 import passport from "passport";   
 import initializePassport from "./config/passport.config.js"; 
+//-----documentation-------//
+import swaggerJSDoc from 'swagger-jsdoc';
+import swaggerUiExpress from 'swagger-ui-express'
+const swaggerOptions = {
+  definition:{
+      openapi: "3.1.0",
+      info: {
+          title: 'Backend E-COMMERCE Coder',
+          description: 'Esta es una api de e-commerce, que maneja usuarios, carritos y productos'
+      }
+  },
+  apis: ['./docs/**/*.yaml']
+}
+const specs = swaggerJSDoc(swaggerOptions)
 //-----Nuevos router despues de Mongoose-------//
 import chatRouter from './routers/chat.router.js'
 import productsRouter from "./routers/products.router.js";
@@ -25,9 +39,12 @@ import logger from "./utils/logger.js";
 
 export const PORT = config.PORT.PORT
 
-const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+const app = express()
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+
+//en el endpoint /docs se muestre la documentacion
+app.use('/docs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs))
 
 app.use(session ({
   store: MongoStore.create({
