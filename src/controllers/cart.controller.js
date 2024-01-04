@@ -87,7 +87,7 @@ export const deleteProductFromCartController = async (req, res) => {
 
     }catch(err){
         logger.error("Error al borrar un producto del carrito", err.message)
-        res.status().json({status: 'error', error: err.message})
+        res.status(500).json({status: 'error', error: err.message})
     }
 
 }
@@ -156,7 +156,7 @@ export const updateProductFromCartController = async (req, res) => {
 
     }catch(err){
         logger.error("Error al actualizar la cantidad en el carrito", err.message)
-        res.status().json({status: 'error', error: err.message})
+        res.status(500).json({status: 'error', error: err.message})
     }
 
 }

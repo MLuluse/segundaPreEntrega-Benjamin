@@ -23,6 +23,7 @@ paths:
         - in: path
           name: cid
           required: true
+          description: Id del carrito
           schema:
             type: string
       requestBody:
@@ -66,7 +67,7 @@ paths:
       responses:
         '200':
           description: Carrito vaciado satisfactoriamente
-        '404':
+        '500':
           description: Carrito no encontrado
   /carts/{cid}/products/{pid}:
     post:
@@ -87,8 +88,12 @@ paths:
       responses:
         '201':
           description: Producto agregado al carrito exitosamente
+        '400':
+          description: No puede agregar su propio producto
         '404':
           description: Carrito o producto no encontrado
+        '500':
+          description: Error al agregar el producto al carrito
     put:
       summary: Actualizar la cantidad de unidades del mismo producto en el carrito
       tags:
@@ -119,6 +124,8 @@ paths:
           description: Cantidad de producto actualizada correctamente
         '404':
           description: Carrito o producto no encontrado
+        '500': 
+          description: Error al actualizar la cantidad del producto
     delete:
       summary: Eliminar un producto del carrito
       tags:
@@ -139,6 +146,8 @@ paths:
           description: Producto eliminado del carrito exitosamente
         '404':
           description: Carrito o producto no encontrado
+        '500':
+          description: Error al borrar un producto del carrito
   /carts/{cid}/purchase:
     get:
       summary: Finalizar la compra del carrito
@@ -154,9 +163,11 @@ paths:
         '200':
           description: Proceso de compra realizado con éxito
         '400':
-          description: No se pudo realizar ninguna compra
+          description: No se pudo realizar ninguna compra carrito vacio
+        '404':
+          description: Carrito o Producto no encontrado 
         '500':
-          description: Error en el servidor
+          description: Error al intentar terminar la compra
 
 components:
   schemas:

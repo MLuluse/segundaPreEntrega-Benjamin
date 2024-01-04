@@ -10,7 +10,7 @@ router.get('/:cid', handlePolices(['USER', 'PREMIUM']),getCartByIdController)
 
 router.post('/:cid/products/:pid', handlePolices(['USER', 'PREMIUM']),postProductAndQuantityOnCartIdController ) 
 
-router.delete('/:cid/products/:pid', handlePolices(['USER', 'PREMIUM']),deleteProductFromCartController) //este solo un user 
+router.delete('/:cid/products/:pid', handlePolices(['USER', 'PREMIUM']),deleteProductFromCartController)
 
 router.put('/:cid', updateCartController)
 

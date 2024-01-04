@@ -20,8 +20,6 @@ paths:
       summary: Crear un nuevo producto
       tags:
         - Products
-      security:
-        -bearerAuth: []
       requestBody:
         description: Datos del nuevo producto
         requested: true
@@ -91,8 +89,6 @@ paths:
 
     put:
       summary: Actualizar un producto por ID
-      security:
-        - bearerAuth: []
       tags:
         - Products
       description: Nuevos datos del producto
