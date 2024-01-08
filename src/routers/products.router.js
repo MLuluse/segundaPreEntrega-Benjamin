@@ -4,7 +4,7 @@ import { handlePolices } from "../middlewares/auth.middleware.js";
 
 const router = Router()
 
-router.get('/', handlePolices(['USER', 'ADMIN', 'PREMIUM']), getAllProductsContoller)  
+router.get('/', getAllProductsContoller)  
  
 router.get('/:pid', handlePolices(['USER', 'ADMIN', 'PREMIUM']),getProductsByIdController ) 
 

@@ -126,3 +126,6 @@
 {"level":"error","timestamp":"2023-12-23T17:52:26.940Z"}
 {"level":"error","message":"Error al postear un producto al carrito","timestamp":"2023-12-23T18:52:30.720Z"}
 {"level":"error","message":"Error al postear un producto al carrito","timestamp":"2023-12-23T18:52:38.411Z"}
+{"level":"error","message":"Error al crear el producto","timestamp":"2024-01-06T20:35:07.406Z"}
+{"level":"error","message":"Error al crear el producto","timestamp":"2024-01-06T20:51:25.133Z"}
+{"level":"error","message":"Error al crear el producto","timestamp":"2024-01-06T20:54:28.229Z"}

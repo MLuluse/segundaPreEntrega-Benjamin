@@ -27,6 +27,7 @@ La aplicación se ejecutará en localhost:8080.
 ## Rutas de la API
 # Productos
 GET /api/products: Obtiene todos los productos.
+GET /api/products/:pid Obtiene un producto especifico.
 POST /api/products: Crea un nuevo producto.
 PUT /api/products/:pid: Actualiza un producto existente.
 DELETE /api/products/:pid: Elimina un producto existente.
