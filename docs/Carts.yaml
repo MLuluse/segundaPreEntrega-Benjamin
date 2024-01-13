@@ -1,5 +1,15 @@
 paths:
-  /carts/{cid}:
+  /api/carts:
+    post:
+      summary: Crea un carrito cuando se crea un User
+      tags:
+        - Carts
+      responses:
+        '201':
+          description: Carrito creado con éxito
+        '500':
+          description: Error de server para crear carrito
+  /api/carts/{cid}:
     get:
       summary: Obtener un carrito por su ID
       tags:
@@ -71,7 +81,7 @@ paths:
           description: Carrito vaciado satisfactoriamente
         '500':
           description: Carrito no encontrado
-  /carts/{cid}/products/{pid}:
+  /api/carts/{cid}/products/{pid}:
     post:
       summary: Cargar productos al carrito
       tags:
@@ -150,7 +160,7 @@ paths:
           description: Carrito o producto no encontrado
         '500':
           description: Error al borrar un producto del carrito
-  /carts/{cid}/purchase:
+  /api/carts/{cid}/purchase:
     get:
       summary: Finalizar la compra del carrito
       tags:
