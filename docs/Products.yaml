@@ -58,7 +58,9 @@ paths:
           content:
             application/json:
              schema:
-               $ref: "#/components/schemas/Product"
+              type: array
+              items:
+                $ref: "#/components/schemas/Product"
         "500":
           description: Error del servidor. No se pudo crear el producto.
 
@@ -81,7 +83,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Product'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
         "404":
           description: Producto no encontrado.
         "500":
@@ -128,7 +132,9 @@ paths:
           content:
             application/json:
               shema:
-                $ref: '#/components/schemas/Product'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
         "403":
           description: No esta autorizado a modificar el producto
         "404":
@@ -153,7 +159,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Product'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
        "404":
           description: Producto no encontrado en la DB
        "500":
@@ -166,6 +174,7 @@ components:
             properties:
               _id: 
                 type: objectId
+                format: bson objectId 
                 description: Id autogenerado por MongoDB
               title:
                 type: string
@@ -195,7 +204,7 @@ components:
                 description: Status true = activo, false = desactivado
               owner:
                 type: string
-                description: Propietario del producto, por defecto administrador, pero puede ser un user Premium
+                description: Propietario del producto. Esto hace referancia a la colection Users, por defecto se setea user pero puede ser cambiado a un ADMIN o  Premium
             required:
                 - title
                 - description

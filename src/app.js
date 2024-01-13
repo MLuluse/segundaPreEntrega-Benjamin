@@ -112,6 +112,8 @@ try {
   app.use('/mockingproducts', mockRouter);
 
   app.use('/loggerTest', loggerTestRouter);
+  
+  app.use('/docs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs))
 
   app.use(errorHandler)
 

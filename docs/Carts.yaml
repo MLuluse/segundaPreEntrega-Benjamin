@@ -13,6 +13,8 @@ paths:
       responses:
         '200':
           description: Carrito obtenido exitosamente
+        '401':
+          description: Usuario no autorizado a ver este carrito
         '404':
           description: Carrito no encontrado
     put:
@@ -174,6 +176,10 @@ components:
     Cart:
       type: object
       properties:
+        _id: 
+          type: objectId
+          format: bson objectId 
+          description: Id autogenerado por MongoDB
         products:
           type: array
           items:
@@ -192,7 +198,7 @@ components:
               quantity:
                 type: number
                 description: Cantidad del producto en el carrito
-          description: Lista de productos en el carrito
+          description: Lista de productos en el carrito. Estos productos son una referncia a la collection Products
       required:
         - products
       description: Carrito de compras
