@@ -16,11 +16,12 @@ describe('Testing E-commerce', () => {
     describe('Test de POST que se encarga de crear un Carrito', () => {
         it('El endpoint POST /api/carts debe crear un carrito cuando se registra un usuario', async () => {
             const result =  await requester.post("/api/carts")
-            expect (result).to.be.eql(201)
+            expect (result.status).to.be.eql(201)
         })
     })
 
     describe('Test registro de session', () => {
+        let cookie
         const testUser = {
             first_name: faker.person.firstName(),
             last_name: faker.person.lastName(),
@@ -32,6 +33,22 @@ describe('Testing E-commerce', () => {
             const response = await requester.post("/api/session/register").send(testUser)
             //console.log(response)
             expect(response.status).to.be.eql(302);
+        })
+        it('Debe loggear un user y debe devolver una cookie', async () => {
+            const result = await requester.post('/api/session/login').send({
+                email: testUser.email,
+                password: testUser.password
+            })
+            const cookieResult =  result.headers['set-cookie'][0]    //el coolkieResult se ve asi cookie_name=cookie_value
+            expect(cookieResult).to.be.ok
+            //console.log(cookieResult)
+            cookie = {
+                name: cookieResult.split('=')[0],
+                value: cookieResult.split('=')[1],
+            }
+            //console.log(cookie)
+            expect(cookie.name).to.be.ok.and.eql('connect.sid')
+            expect(cookie.value).to.be.ok
         })
     })
 
