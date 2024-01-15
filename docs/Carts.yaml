@@ -212,3 +212,8 @@ components:
       required:
         - products
       description: Carrito de compras
+    securitySchemes:
+      bearerAuth:
+        type: http
+        scheme: bearer
+        bearerFormat: auth.middleware

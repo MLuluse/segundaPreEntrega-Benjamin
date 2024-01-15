@@ -14,7 +14,26 @@
     <a class="btn btn-primary" href="/products">Productos</a> 
     <a class="btn btn-primary" href="/carts/{{cart}}">Ver carrito</a>
     <a class="btn btn-primary" href="/api/session/logout">Logout</a>
-    <a class="btn btn-warning" href="/api/users/premium/{{email}}">Cambiar A Premium</a>
+    <a class="btn btn-warning" onclick="changeRole('{{email}}')"> <!--href="/api/users/premium/{{email}}"--> Cambiar Mi Role</a>
 </div>
 </div>
+<script>
+    changeRole = (email) => {
+     fetch(`/api/users/premium/${email}` , {
+            method: 'get',
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        .then(result => result.json())
+        .then(result => {
+            if (result.status === 'error') throw new Error(result.error)
+            alert(`Cambio su Role vuelva a logerse para ver los cambios`)
+            window.location.href = '/current'
+        })
+        .catch(err => alert(`Ocurrió un error :(\n${err}`))
+
+
+    }
+</script>
 

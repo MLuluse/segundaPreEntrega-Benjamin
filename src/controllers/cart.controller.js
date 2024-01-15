@@ -43,7 +43,7 @@ export const postProductAndQuantityOnCartIdController = async (req, res) => {
         }
         //cheuqueo que el que va a agregar no sea el owner
         if (productToAdd.owner === req.session.user.email){
-            return res.status(400).json ({status:error, error: 'No podes agregar tu propio producto'})
+            return res.status(400).json ({status:error, error: 'Como usuario Premium, no tiene permisos para agregar productos que usted mismo creo'})
         } 
 
         const productIndex = cartToUpdate.products.findIndex(item => item.product == pid)
