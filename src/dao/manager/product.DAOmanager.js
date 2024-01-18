@@ -90,7 +90,7 @@ const PORT = config.PORT.PORT
 
     updateProduct : async (id, info) => {
     try{
-    const prodactualizado = await productModel.updateOne(id, info)
+    const prodactualizado = await productModel.updateOne({_id: id}, info)
     return prodactualizado
     }catch(err){
         return('Error al actualizar productos del manager', err.message)

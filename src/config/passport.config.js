@@ -74,7 +74,7 @@ const initializePassport = () => {
         clientSecret: config.GITHUNSTRATEGY.clientSecret,
         callbackURL: config.GITHUNSTRATEGY.callbackURL
     }, async(accessToken, refreshToken, profile, done) =>{
-       // console.log(profile)
+        //console.log(profile)
         try{
             const user = await UserService.findUser({email: profile._json.email})
             if (user) return done(null, user) //si ya existe el ususario no lo guarda en base de datos

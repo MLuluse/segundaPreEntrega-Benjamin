@@ -16,7 +16,7 @@ const userDAO = {
     },
 
     findAndUpdate : async(id, data) => {
-        const findandupdate = await userModel.findByIdAndUpdate(id, data)
+        const findandupdate = await userModel.updateOne({_id: id}, data)
         return findandupdate
     }
 
