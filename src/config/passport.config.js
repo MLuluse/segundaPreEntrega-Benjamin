@@ -70,9 +70,9 @@ const initializePassport = () => {
 
     //credenciales de terceros
     passport.use('github', new GitHubStrategy({
-        clientID: config.GITHUNSTRATEGY.clientID, 
-        clientSecret: config.GITHUNSTRATEGY.clientSecret,
-        callbackURL: config.GITHUNSTRATEGY.callbackURL
+        clientID: config.GITHUBSTRATEGY.clientID, 
+        clientSecret: config.GITHUBSTRATEGY.clientSecret,
+        callbackURL: config.GITHUBSTRATEGY.callbackURL
     }, async(accessToken, refreshToken, profile, done) =>{
         //console.log(profile)
         try{
@@ -88,7 +88,7 @@ const initializePassport = () => {
                 role: profile._json.type,
                 cart: Cart._id
             })
-            
+            //console.log('new user github', newUser)
             return done(null, newUser)
         }catch(err) {
             logger.error('no  se pudo entrar con github', err.message)

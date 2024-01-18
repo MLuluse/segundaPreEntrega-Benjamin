@@ -11,15 +11,15 @@
             <div class="mb-3"><strong>Category:</strong> {{product.category}}</div>
             <div class="mb-3"><strong>Stock:</strong> {{product.stock}}</div>
         </div>
-     <a class="btn btn-primary" href="/products">Lista de productos</a> 
-     <button class="btn btn-danger" onclick="deleteProduct('{{product._id}}')">Borrar Producto</button> 
+     <a class="btn btn-primary" href="/products"> Volver a Productos </a> 
+     <button class="btn btn-danger" onclick="deleteProduct('{{product._id}}')"> Borrar Producto </button> 
     </div>
     
 </div>
 <div class="container">
      <div class="card mb-5 col-md-6 offset-md-3">
         <div class="card-header bg-primary text-center text-white">
-            <h5>actualizar</h5>
+            <h5>ACTUALIZAR</h5>
         </div>
         <div class="card-body">
             <form id="productForm">
@@ -65,12 +65,19 @@ updateProduct = (pid) => {
         thumbnail: document.getElementById("thumbnail").value,
         status: document.getElementById("status").value 
         }
+
+    // Filtrar propiedades con valores no nulos o vacíos
+    const filteredFormData = Object.fromEntries(
+        Object.entries(formData).filter(([_, value]) => value !== null && value !== '')
+    );
+    //console.log(`Filtered form data front`, filteredFormData)
+
     fetch(`/api/products/${pid}`, {
         method: 'put',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(filteredFormData),
         })
         .then(result => result.json())
         .then(result => {
@@ -93,6 +100,5 @@ deleteProduct = (pid) => {
     })
     .catch(err => alert(`Ocurrió un error :(\n${err}`))
 }
-
 
 </script>

@@ -16,7 +16,7 @@ export default{
         SESSION_SECRET: process.env.SESSION_SECRET
     },
 
-    GITHUNSTRATEGY:{
+    GITHUBSTRATEGY:{
         clientID: process.env.clientID,
         clientSecret: process.env.clientSecret,
         callbackURL: process.env.callbackURL

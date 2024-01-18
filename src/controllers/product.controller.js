@@ -56,13 +56,19 @@ export const updateProductByIdController = async(req, res) => {
     try{
     const productId = req.params.pid
     const info = req.body
+    //console.log('producto en update', productId)
     if (req.session.user.role === 'premium') {
         const product = await ProductService.getById(productId)
         if (product.owner !== req.session.user.email) {
-            return res.status(403).json({ status: 'error', error: 'No estas autorizado'})
+            return res.status(403).json({ status: 'error', error: 'No estas autorizado para actualizar este producto'})
         }}
+    const prodToUpdate = await ProductService.getById(productId)
+    //console.log('Producto a actualizar', prodToUpdate)
+    const replaceupdatedProduct = {...prodToUpdate, ...info}
+    //console.log('replaceupdatedProduct', replaceupdatedProduct )
 
-    const updatedProducts = await ProductService.update(productId, info, { new: true })
+    const updatedProducts = await ProductService.update({_id: productId}, replaceupdatedProduct)
+    //console.log('producto ya acutalizado', updatedProducts)
     if (!updatedProducts) {
         return res.status(404).json({ status: 'error', error: 'Not found' })
     }
@@ -86,10 +92,11 @@ export const deleteProductByIdController = async( req, res) =>{
         if (!product) {
             return res.status(404).json({ error: 'Producto no encontrado en la base de datos' })
         }
+        if (product.owner !== userInfo.email) return res.status(403).json({ status: 'error', error: 'No estas autorizado a borrar este producto'})
         if (userInfo.role === 'admin' || product.owner === userInfo.email) {
             const deleteProduct = await ProductService.remove(product)
             if (!deleteProduct)  return res.status(404).json({ error: `Producto con ID: '${product}' no encontrado` })
-      
+        
         const products = await ProductService.printProducts()
         res.status(200).json({status: 'success', payload: products})
     } }
