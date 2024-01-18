@@ -80,18 +80,21 @@ const initializePassport = () => {
             if (user) return done(null, user) //si ya existe el ususario no lo guarda en base de datos
 
             const Cart = await CartService.create({})  //creo el carrito para github
-            const newUser = await UserService.createUser({
+            const newUser = {
                 first_name: profile._json.login,
                 last_name: profile._json.name,
                 email: profile._json.email,
-                password: profile._json.password,
-                role: profile._json.type,
+                //password: profile._json.password,
+                //role: "user",
                 cart: Cart._id
-            })
-            //console.log('new user github', newUser)
-            return done(null, newUser)
+            }
+            //console.log('newUser github',newUser)
+            const result = await UserService.createUser(newUser)
+            //console.log('result github', result)
+            return done(null, result)
         }catch(err) {
             logger.error('no  se pudo entrar con github', err.message)
+            //console.log('error en github', err)
             return done(`Error to login with github ${err}`)
         }
     }))
