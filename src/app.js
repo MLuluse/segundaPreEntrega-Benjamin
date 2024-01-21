@@ -115,8 +115,7 @@ try {
   
   app.use('/docs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs))
 
-  app.use(errorHandler)
-
+  //app.use(errorHandler)
 
   
 } catch (err) {

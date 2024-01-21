@@ -10,7 +10,7 @@ const userDAO = {
         return userOne
     },
     findById : async (id) => {
-        const getById = await userModel.findById(id)
+        const getById = await userModel.findById(id).lean().exec()
         return getById
     },
 
@@ -33,9 +33,6 @@ const userDAO = {
         const InactiveUser = await userModel.find({ last_connection: { $lt: data } })
         return InactiveUser
     }
-
-
-
 
 }
 

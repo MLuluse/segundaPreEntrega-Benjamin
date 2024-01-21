@@ -38,15 +38,18 @@ export const generateProducts = () => {
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      let folder = 'documents'
-  
+      //console.log('File en multer', file)
+
       if (file.fieldname === 'profileImage') {
-        folder = 'profiles'
+        cb( null, 'uploads/profiles/')
+        
       } else if (file.fieldname === 'productImage') {
-        folder = 'products'
+        cb( null, 'uploads/products/')
+      } else if (file.fieldname === 'documents'){
+        cb( null, 'uploads/documents/')
+      }else {
+        cb({ message: 'Tipo de archivo no válido' }, null);
       }
-  
-      cb(null, `uploads/${folder}`)
     },
     filename: function (req, file, cb) {
       cb(null, file.originalname)
