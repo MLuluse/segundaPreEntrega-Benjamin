@@ -1,6 +1,11 @@
 
 import { UserService } from "../services/services.js"
 
+export const getAllUsersController = async(req, res) => {
+    const users = await UserService.getAll()
+    res.json ({users})
+}
+
 export const updatedUserRoleController = async (req, res) => {
     try {
         const email = req.params.email;
@@ -28,4 +33,59 @@ export const updatedUserRoleController = async (req, res) => {
     }
 }
 
+export const uploadDocument = async (req, res) => {
+    const userId = req.params.uid
+    console.log('UID en uploader', userId)
+    const documents = req.files 
+
+    try {
+      
+      if (!documents || documents.length === 0) {
+        return res.status(400).json({ error: 'Archivos de documentos no proporcionados.' });
+      }
+      console.log('docuents en upload', documents)
+      
+      const user = await UserService.findById(userId);
+
+      if (!user) {
+        return res.status(404).json({ error: 'Usuario no encontrado' });
+      }
+      console.log('user en uploads', user)
+
+      const uploadDocToUser = await UserService.findAndUpdate(
+        { _id: userId },
+        {
+          $set: {
+            documents: documents.map((document) => ({
+              name: document.originalname,
+              reference: `/uploads/documents/${document.filename}`,
+            })),
+          },
+        },
+        { new: true } // Para devolver el documento actualizado
+      );
+        console.log('Upload del doc al user', uploadDocToUser)
+      res.status(200).json({ message: 'Documentos subidos y usuario actualizado exitosamente', user: uploadDocToUser })
+     
+      
+/*
+      // Actualizar el estado del usuario y guardar los cambios
+      user.documents = documents.map((document) => ({
+        name: document.originalname,
+        reference: `/uploads/documents/${document.filename}`,
+      }));
+
+      await UserService.save();
+
+      // Responder con un mensaje de éxito y los detalles actualizados del usuario
+      res.status(200).json({ message: 'Documentos subidos y usuario actualizado exitosamente', user });*/
+    } catch (error) {
+      res.status(500).json({ error: 'Error al subir documentos o actualizar el usuario' });
+    }
+  }
+
+
+  export const deleteInactiveUsersController = async ( req, res) => {
+
+  }
 

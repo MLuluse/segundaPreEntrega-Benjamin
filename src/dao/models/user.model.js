@@ -10,7 +10,14 @@ const userSchema = new mongoose.Schema({
     age: Number,
     password: String,
     cart: {type: mongoose.Schema.Types.ObjectId,  ref: 'carts'},
-    role: {type: String, enum: ['user', 'admin', 'premium'], default:'user'} //enum marca que solo puede recibir esos valores
+    role: {type: String, enum: ['user', 'admin', 'premium'], default:'user'}, //enum marca que solo puede recibir esos valores
+    documents: {
+        type: [{
+             name: String,  //nombre del documento
+             reference: String, //link a documento
+        }
+    ]},
+    last_connection: { type: Date, default: Date.now }
 })
 
 mongoose.set('strictQuery', false)

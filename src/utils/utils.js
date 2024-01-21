@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt'
 import {fakerES as faker} from '@faker-js/faker'
+import multer from 'multer'
 
 //helper function --> esta es la que combierte la contraseña en otro texto (hash) 
 export const createHash = password => bcrypt.hashSync(password, bcrypt.genSaltSync(15))
@@ -34,3 +35,22 @@ export const generateProducts = () => {
         stock: faker.number.int(50),
     }
 }
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      let folder = 'documents'
+  
+      if (file.fieldname === 'profileImage') {
+        folder = 'profiles'
+      } else if (file.fieldname === 'productImage') {
+        folder = 'products'
+      }
+  
+      cb(null, `uploads/${folder}`)
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.originalname)
+    },
+  })
+
+  export const uploader = multer({storage})

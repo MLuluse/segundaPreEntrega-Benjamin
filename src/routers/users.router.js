@@ -1,9 +1,16 @@
 import { Router } from "express";
-import {updatedUserRoleController} from '../controllers/users.controller.js'
+import {updatedUserRoleController, uploadDocument, deleteInactiveUsersController, getAllUsersController} from '../controllers/users.controller.js'
+import { uploader } from "../utils/utils.js";
 
 const router = Router()
 
-router.get("/premium/:uid", updatedUserRoleController) 
+router.get("/", getAllUsersController)
+
+router.get("/premium/:uid", updatedUserRoleController)
+
+router.post("/:uid/documents", uploader.array('documents'),  uploadDocument)
+
+router.delete("/", deleteInactiveUsersController)
 
 
 export default router
