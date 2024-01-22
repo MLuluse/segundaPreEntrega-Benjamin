@@ -106,6 +106,7 @@ try {
   app.use('/', sessionViewsRouter)
   app.use("/products", viewsRouter);
   app.use("/carts", viewsRouter);
+  app.use("/users", viewsRouter );
 
   app.use("/chat", chatRouter);
 

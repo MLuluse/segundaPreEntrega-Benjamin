@@ -1,4 +1,4 @@
-import { ProductService, TicketService } from '../services/services.js'
+import { ProductService, TicketService, UserService } from '../services/services.js'
 import { CartService } from '../services/services.js'
 import { PORT } from '../app.js'
 import logger from '../utils/logger.js'
@@ -68,6 +68,19 @@ export const productDetailViewController =  async (req, res) => {
         res.status(200).render("product", {product: result})
 
     }
+
+export const usersAdminViewontroller  = async (req, res) => {
+    const email = req.params.email
+    if ( email === 'adminCoder@coder.com' ){
+        const users = await UserService.getAll()
+        res.status(200).render('usersAdminViews', {users})
+    } else {
+        const result = await UserService.findUser(email)
+        console.log(result)
+        if (result.role === 'premium' || result.role === 'user') res.status(203).render({error:` No estas autorizado a ver esta vista`})
+    }
+    
+}
 
 
 
