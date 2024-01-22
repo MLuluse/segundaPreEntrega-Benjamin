@@ -40,13 +40,12 @@ const storage = multer.diskStorage({
     destination: function (req, file, cb) {
       console.log('File en multer', file)
     
-
     if (file.fieldname === 'profileImage') {
-        cb( null, 'uploads/profiles/')  
+        cb( null, 'public/profiles/')  
       } else if (file.fieldname === 'productImage') {
-        cb( null, 'uploads/products/')
+        cb( null, 'public/products/')
       } else if (file.fieldname === 'documents'){
-        cb( null, 'uploads/documents/')
+        cb( null, 'public/documents/')
       }else {
         cb({ message: 'Tipo de archivo no válido' }, null);
       }
@@ -55,6 +54,5 @@ const storage = multer.diskStorage({
       cb(null, file.originalname)
     },
   })
-
   export const uploader = multer({storage})
   
