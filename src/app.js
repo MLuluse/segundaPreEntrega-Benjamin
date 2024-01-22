@@ -107,13 +107,11 @@ try {
   app.use("/products", viewsRouter);
   app.use("/carts", viewsRouter);
   app.use("/users", viewsRouter );
-
   app.use("/chat", chatRouter);
-
-  app.use('/mockingproducts', mockRouter);
-
-  app.use('/loggerTest', loggerTestRouter);
   
+  //Info extra de la API
+  app.use('/mockingproducts', mockRouter);
+  app.use('/loggerTest', loggerTestRouter);
   app.use('/docs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs))
 
   //app.use(errorHandler)

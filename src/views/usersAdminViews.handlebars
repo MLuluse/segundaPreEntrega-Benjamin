@@ -26,7 +26,7 @@
                     <td>{{this.email}}</td>
                     <td>{{this.role}}</td>
                     <td>
-                        <button class="btn btn-warning btn-sm" onclick="makePremium('{{this._id}}','{{this.email}}')">Premium</button>
+                        <button class="btn btn-warning btn-sm" onclick="changeRole('{{this.email}}')">Cambiar el Rol</button>
                     </td>
                     <td>
                         <button
@@ -46,3 +46,25 @@
         </div>
     </div>
 </div>
+<script>
+    changeRole = (email) => {
+     fetch(`/api/users/premium/${email}` , {
+            method: 'get',
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        .then(result => result.json())
+        .then(result => {
+            if (result.status === 'error') throw new Error(result.error)
+            alert(`Cambio el Role del user`)
+            setTimeout(()=>{
+                location.reload()
+            },1000)
+
+        })
+        .catch(err => alert(`Ocurrió un error :(\n${err}`))
+
+
+    }
+</script>

@@ -78,8 +78,7 @@ export const usersAdminViewontroller  = async (req, res) => {
         const result = await UserService.findUser(email)
         console.log(result)
         if (result.role === 'premium' || result.role === 'user') res.status(203).render({error:` No estas autorizado a ver esta vista`})
-    }
-    
+    }  
 }
 
 
