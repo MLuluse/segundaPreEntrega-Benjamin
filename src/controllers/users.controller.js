@@ -51,24 +51,22 @@ export const uploadDocument = async (req, res) => {
       if (!documents || documents.length === 0) {
         return res.status(400).json({ error: 'No hay documento adjuntado.' });
       }
-      console.log('documents en upload', documents)
+      //console.log('documents en upload', documents)
       const user = await UserService.findById(userId);
 
       if (!user) {
         return res.status(404).json({ error: 'No se encontro el usuario' });
       }
       //console.log('user en uploads', user)
+    const newDocument = {
+      name: documents.originalname,
+      reference: `/public/${documents.fieldname}/${documents.originalname}`
+    };
+    //console.log('esto es el new doc', newDocument)
+    const uploadDocToUser = await UserService.findAndUpdate({_id: user._id}, { $push: { documents: newDocument } },{ new: true } );
 
-    const newDocument = documents.map(document => ({
-        name: document.originalname,
-        reference: `/public/${document.fieldname}/${document.originalname}`,
-    }))
-    console.log(newDocument)
 
-    const uploadDocToUser = await UserService.findAndUpdate( user._id, {$set: { documents: newDocument}})
-    console.log('Upload del doc al user', uploadDocToUser)
-
-    res.status(201).json({ message: 'Documentos subidos y usuario actualizado exitosamente', payload: { uploadDocToUser }})
+    res.status(201).json({ message: 'Documentos subidos y usuario actualizado exitosamente', payload: uploadDocToUser })
     } catch (error) {
       //logger.error('Error en la entrada al subir un documento', error.message)
       res.status(500).json({ error: 'Error al subir documentos o actualizar el usuario', error});
