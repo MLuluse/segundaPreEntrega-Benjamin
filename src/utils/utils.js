@@ -38,8 +38,8 @@ export const generateProducts = () => {
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      console.log('File en multer', file)
-    
+      //console.log('File en multer', file)
+      //cb( null, 'public/documents/')
     if (file.fieldname === 'profileImage') {
         cb( null, 'public/profiles/')  
       } else if (file.fieldname === 'productImage') {
@@ -54,5 +54,5 @@ const storage = multer.diskStorage({
       cb(null, file.originalname)
     },
   })
-  export const uploader = multer({storage})
+  export const uploader = multer(storage)
   

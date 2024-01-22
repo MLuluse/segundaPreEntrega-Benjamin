@@ -8,7 +8,7 @@ router.get("/", getAllUsersController)
 
 router.get("/premium/:uid", updatedUserRoleController)
 
-router.post("/:uid/documents", uploader.array('documents',3),  uploadDocument)
+router.post("/:uid/documents", uploader.single('profileImage'), uploadDocument)
 
 router.delete("/", deleteInactiveUsersController)
 
