@@ -42,11 +42,11 @@ export const updatedUserRoleController = async (req, res) => {
 
 export const uploadDocument = async (req, res) => {
     const userId = req.params.uid
-    console.log('UID en uploader', userId)
+    const user = await UserService.findById(userId)
+    console.log('UID en uploader', user)
     const documents = req.files 
     
     try {
-      
       if (!documents || documents.length === 0) {
         return res.status(400).json({ error: 'No hay documento adjuntado.' });
       }
@@ -59,23 +59,15 @@ export const uploadDocument = async (req, res) => {
       }
       console.log('user en uploads', user)
 
-      const uploadDocToUser = await UserService.findAndUpdate(
-        { _id: user._id },
-        {$set: {
-            documents: documents.map((document) => ({
-              name: document.originalname,
-              reference: `/uploads/documents/${document.filename}`,
-            })),
-          },
-        }
-      
-      );
+    const newDocument = documents.map((document) => ({
+        name: document.originalname,
+        reference: `/uploads/documents/${document.filename}`,
+    }))
 
+    const uploadDocToUser = await UserService.findAndUpdate({ _id: user._id }, {$set: { documents: newDocument}})
+    //console.log('Upload del doc al user', uploadDocToUser)
 
-       //console.log('Upload del doc al user', uploadDocToUser)
-      res.status(201).json({ message: 'Documentos subidos y usuario actualizado exitosamente', payload: { uploadDocToUser }})
-     
-    
+    res.status(201).json({ message: 'Documentos subidos y usuario actualizado exitosamente', payload: { uploadDocToUser }})
     } catch (error) {
         logger.error('Error en la entrada al subir un documento', error.message)
       res.status(500).json({ error: 'Error al subir documentos o actualizar el usuario', error});
