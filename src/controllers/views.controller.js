@@ -2,6 +2,7 @@ import { ProductService, TicketService, UserService } from '../services/services
 import { CartService } from '../services/services.js'
 import { PORT } from '../app.js'
 import logger from '../utils/logger.js'
+import AllUsersDTO from '../dto/allUsers.dto.js'
 
 export const getProductsViewController = async (req, res) => {
     const result = await ProductService.getAllPaginate(req, res)
@@ -73,12 +74,18 @@ export const usersAdminViewontroller  = async (req, res) => {
     const email = req.params.email
     if ( email === 'adminCoder@coder.com' ){
         const users = await UserService.getAll()
-        res.status(200).render('usersAdminViews', {users})
+        const allUsers = new AllUsersDTO(users)
+        //console.log('all users en userAdmin views',allUsers)
+        res.status(200).render('usersAdminViews', allUsers)
     } else {
         const result = await UserService.findUser(email)
         console.log(result)
         if (result.role === 'premium' || result.role === 'user') res.status(203).render({error:` No estas autorizado a ver esta vista`})
     }  
+}
+
+export const ticketViewController = async(req, res) =>{
+
 }
 
 

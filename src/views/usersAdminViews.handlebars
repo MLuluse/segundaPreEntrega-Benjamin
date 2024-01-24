@@ -10,8 +10,7 @@
     <table class="table table-bordered table-striped table-hover mt-5 text-center align-middle" id="productsTable">
         <thead class="table-dark">
             <tr>
-                <th>Nombre</th>
-                <th>Apellido</th>
+                <th>Nombre Completo</th>
                 <th>Email</th>
                 <th>Rol</th>
                 <th>Actualizar Rol</th>
@@ -21,8 +20,7 @@
         <tbody id="tbody">
             {{#each users}}
                 <tr>
-                    <td>{{this.first_name}}</td>
-                    <td>{{this.last_name}}</td>
+                    <td>{{this.full_name}}</td>
                     <td>{{this.email}}</td>
                     <td>{{this.role}}</td>
                     <td>
@@ -31,7 +29,7 @@
                     <td>
                         <button
                             class="btn btn-danger"
-                            onclick="deleteUser('{{this._id}}')"
+                            onclick="deleteUser('{{this.email}}')"
                         >
                             ❌
                         </button>

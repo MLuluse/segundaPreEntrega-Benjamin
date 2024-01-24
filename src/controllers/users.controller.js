@@ -1,11 +1,15 @@
 
 import { UserService } from "../services/services.js"
 import logger from "../utils/logger.js"
+import AllUsersDTO from "../dto/allUsers.dto.js"
 
 export const getAllUsersController = async(req, res) => {
     try{
         const users = await UserService.getAll()
-        res.status(200).json({ status: "success", message: "Todos los user fueron obtenidos con éxito", payload: users })
+        const allUsers = new AllUsersDTO(users)
+        //console.log('All users en el controller', allUsers)
+
+        res.status(200).json({ status: "success", message: "Todos los user fueron obtenidos con éxito", payload: allUsers })
     }catch (err) {
         logger.error("Error al obtener todos los usuarios", err.message)
         res.status(404).json({ error: err.message });
@@ -75,6 +79,7 @@ export const uploadDocument = async (req, res) => {
 
 
   export const deleteInactiveUsersController = async ( req, res) => {
+
 
   }
 
