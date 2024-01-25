@@ -8,7 +8,6 @@ import { createHash } from "../utils/utils.js";
 
 
 
-
 const sessionController = {};
 
 sessionController.register = async (req, res) => {
@@ -25,11 +24,13 @@ sessionController.loginPage = (req, res) => {
   res.render('sessions/login');
 };
 
-sessionController.login = (req, res) => {
-  passport.authenticate('login', { failureRedirect: '/api/session/failLogin' })(req, res, () => {
+sessionController.login = async (req, res) => {
+  passport.authenticate('login', { failureRedirect: '/api/session/failLogin' })  (req, res, async () => {
     if (!req.user) {
       return res.status(400).send({ status: 'error', error: 'Invalid credentials' });
     }
+  try{
+
     req.session.user = {
       id: req.user._id,
       first_name: req.user.first_name,
@@ -41,8 +42,11 @@ sessionController.login = (req, res) => {
     };
 
     res.redirect('/products');
-  });
-};
+  }
+  catch(error){
+    return res.status(500).send({ status: 'error', error: 'Error de servidor' })
+  }
+  })}
 
 sessionController.failLogin = (req, res) => {
   res.send({ error: 'Passport login failed' });
@@ -62,9 +66,13 @@ sessionController.logout = (req, res) => {
 sessionController.github = passport.authenticate('github', { scope: ['user:email'] });
 
 sessionController.githubCallback = async (req, res) => {
-  passport.authenticate('github', { failureRedirect: '/login' })(req, res, () => {
+  passport.authenticate('github', { failureRedirect: '/login' })(req, res, async () => {
+    try{
     req.session.user = req.user;
-    res.redirect('/products');
+    res.redirect('/products')
+  }catch(error){
+    return res.status(500).send({ status: 'error', error: 'Error de servidor' })
+  }
   });
 };
 
