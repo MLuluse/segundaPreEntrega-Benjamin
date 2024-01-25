@@ -1,5 +1,5 @@
 <div class="container">
-    <h2 class="text-center mb-4">Actualizar-Crear Producto</h2>
+    <h2 class="text-center mb-4">Crear Producto</h2>
     <hr />
     <div class="card mb-5 col-md-6 offset-md-3">
         <div class="card-header bg-primary text-center text-white">
@@ -33,6 +33,7 @@
                 </div>
             </form>
             <button class="btn btn-success " id="createProduct" >Agregar Producto</button>
+            <a class="btn btn-primary" href="/products"> Volver </a> 
         </div>
     </div>
     <hr />
@@ -74,39 +75,5 @@ document.getElementById('createProduct').addEventListener('click', () =>{
     } )
 })
 
-
-
-let updateProduct = (pid) => {
-       // Obtener el formulario por su ID
-    const form = document.getElementById('form');
-
-    // Crear un objeto para almacenar los datos del formulario
-    const formData = {
-        title: form.querySelector('#title').value,
-        description: form.querySelector('#description').value,
-        price: form.querySelector('#price').value,
-        code: form.querySelector('#code').value,
-        category: form.querySelector('#category').value,
-        stock: form.querySelector('#stock').value,
-        thumbnail: form.querySelector('#thumbnail').value,
-        status: form.querySelector('#status').value
-    };
-    console.log('formData update',fromData)
-    fetch(`/api/products/${pid}`, {
-        method: 'put',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-        })
-        .then(result => result.json())
-        .then(result => {
-            console.log('result put', result)
-            if (result.status === 'error') throw new Error(result.error)
-            alert(`Todo salió bien! :)\nEl producto se actualizo en db ${result._id}!`)
-            form.reset()
-        })
-        .catch(err => alert(`Ocurrió un error :(\n${err}`))
-}
 
 </script>
