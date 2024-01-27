@@ -7,9 +7,8 @@ export const getAllUsersController = async(req, res) => {
     try{
         const users = await UserService.getAll()
         const allUsers = new AllUsersDTO(users)
-        //console.log('All users en el controller', allUsers)
-
-        res.status(200).json({ status: "success", message: "Todos los user fueron obtenidos con éxito", payload: allUsers })
+        //console.log('para ver los documents', allUsers)
+        res.status(200).json({ status: "success", message: "Todos los user fueron obtenidos con éxito", payload: users })
     }catch (err) {
         logger.error("Error al obtener todos los usuarios", err.message)
         res.status(404).json({ error: err.message });
@@ -19,36 +18,51 @@ export const getAllUsersController = async(req, res) => {
 
 export const updatedUserRoleController = async (req, res) => {
     try {
-        const email = req.params.email;
-        const user = await UserService.findUser(email)
-        //console.log('user dentro de update', user)
-
+        const  uid= req.params.uid;
+       // console.log('user ID', uid)
+        const user = await UserService.findById(uid)
+       // console.log('user dentro de update', user)
+        let newRole
+       
         if (!user) {return res.status(404).json({error: "Usuario no encontrado"})}
 
-       
         if (user.role === "admin") {
            return res.status(409).json({code: 1, error: "Usted es un administrador"}) 
         }
 
-        const newRole = user.role === 'user' ? 'premium' : 'user'
-        //console.log('newRole Print', newRole)
+        const documentos = user.documents
+        let nombresSinExtention = []
+        documentos.forEach(documento => {
+          const nombreDocumento = documento.name
+          const partesNombre = nombreDocumento.split('.')
+          const nombreSinExtention = partesNombre[0]
+          nombresSinExtention.push(nombreSinExtention)
+        })
+        //console.log('nombres de documentos sin extenciones', nombresSinExtention)
+        const valoresNecesarios = ['identificationDocument', 'addressProofDocument','bankStatementDocument']
 
-        const updatedUser = await UserService.findAndUpdate({_id: user._id}, {role: newRole})
-        //console.log('Role user actualizado', updatedUser)
-        
+        if (user.role === 'user' && (valoresNecesarios.every(valor => nombresSinExtention.includes(valor)))) {
+          newRole = 'premium'
+        } else if (user.role === 'premium') {
+          newRole = 'user';
+        } else {
+          console.log("Falta cargar algun dato");
+          return res.status(400).json({ error: "El usuario no ha terminado de procesar su documentación" })
+        }
+        //console.log('newRole Print', newRole)
+        const updatedUser = await UserService.findAndUpdate(user._id, {role: newRole})
         res.status(201).json({ status: "success", message: "Rol de usuario actualizado con éxito", payload: updatedUser })
 
     } catch (err) {
-        logger.error("Error al actualizar el rol del usuario", err.message)
+        //logger.error("Error al actualizar el rol del usuario", err.message)
         res.status(500).json({ error: err.message });
     }
 }
-
 export const uploadDocument = async (req, res) => {
     const userId = req.params.uid
     const user = await UserService.findById(userId)
     //console.log('UID en uploader', user)
-    const documents = req.file
+    const documents = req.files
     //console.log('esto es el req.file', documents)
 
     try {
@@ -56,23 +70,24 @@ export const uploadDocument = async (req, res) => {
         return res.status(400).json({ error: 'No hay documento adjuntado.' });
       }
       //console.log('documents en upload', documents)
-      const user = await UserService.findById(userId);
-
       if (!user) {
         return res.status(404).json({ error: 'No se encontro el usuario' });
       }
-      //console.log('user en uploads', user)
-    const newDocument = {
-      name: documents.originalname,
-      reference: `/public/${documents.fieldname}/${documents.originalname}`
-    };
-    //console.log('esto es el new doc', newDocument)
-    const uploadDocToUser = await UserService.findAndUpdate({_id: user._id}, { $push: { documents: newDocument } },{ new: true } );
+      const uploadedDocuments = [];
+      for (const fieldName in documents) {
+        //console.log('fieldname en docs', fieldName)
+        const newDocument = {
+          name: documents[fieldName][0].originalname,
+          reference: documents[fieldName][0].destination
+         };
+       uploadedDocuments.push(newDocument);
+      }
+      //console.log('uploadedDocs en controller', uploadedDocuments)
 
-
+    const uploadDocToUser = await UserService.findAndUpdate({_id: user._id}, { $push: { documents: { $each: uploadedDocuments } } },{ new: true } )
     res.status(201).json({ message: 'Documentos subidos y usuario actualizado exitosamente', payload: uploadDocToUser })
     } catch (error) {
-      //logger.error('Error en la entrada al subir un documento', error.message)
+      logger.error('Error en la entrada al subir un documento', error.message)
       res.status(500).json({ error: 'Error al subir documentos o actualizar el usuario', error});
     }
   }

@@ -1,7 +1,8 @@
 <div class="table-responsive container my-5">
-    <H1>Bienvenido</H1> 
+    <H1>Bienvenido</H1>
     <h3>{{user.first_name}} {{user.last_name}} (<a href="/current">{{user.email}}) </a></h3>
     <h3>Role: {{user.role}} </h3>
+    
     <!--<h3>id: {{user.id}} </h3>-->
     <h3 id="cart" data-cid="{{user.cart}}">Su carrito es el: {{user.cart}}</h3>
     <a class="btn btn-primary" href="/api/session/logout">Logout</a> 

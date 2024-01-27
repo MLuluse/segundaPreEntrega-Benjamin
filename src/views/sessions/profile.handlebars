@@ -1,7 +1,8 @@
 <div class="container border border-2 ">
-<h2>Bienvenido {{first_name}} </h2>
+<h2>Bienvenido {{first_name}}  </h2>
 <div class="user-card">
     <ul>
+        <li>id: {{id}}</li>
         <li>Firstname: {{first_name}}</li>
         <li>Email: {{email}}</li>
         <li>Role: {{role}}</li>
@@ -14,12 +15,12 @@
     <a class="btn btn-primary" href="/products">Productos</a> 
     <a class="btn btn-primary" href="/carts/{{cart}}">Ver carrito</a>
     <a class="btn btn-primary" href="/api/session/logout">Logout</a>
-    <a class="btn btn-warning" onclick="changeRole('{{email}}')">Cambiar Mi Role</a>
+    <a class="btn btn-warning" onclick="changeRole('{{id}}')">Cambiar Mi Role</a>
 </div>
 </div>
 <script>
-    changeRole = (email) => {
-     fetch(`/api/users/premium/${email}` , {
+    changeRole = (id) => {
+     fetch(`/api/users/premium/${id}` , {
             method: 'get',
             headers: {
                 "Content-Type": "application/json"
@@ -27,7 +28,7 @@
         })
         .then(result => result.json())
         .then(result => {
-            if (result.status === 'error') throw new Error(result.error)
+            //if (result.status === 'error') throw new Error(result.error)
             alert(`Cambio su Role vuelva a logerse para ver los cambios`)
             window.location.href = '/current'
         })

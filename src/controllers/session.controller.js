@@ -52,15 +52,19 @@ sessionController.failLogin = (req, res) => {
   res.send({ error: 'Passport login failed' });
 };
 
-sessionController.logout = (req, res) => {
-  req.session.destroy(err => {
-    if (err) {
-      logger.error('error al deslogearse en contoller', err.message);
-      res.status(500).render('error/base', { error: err });
-    } else {
-      res.redirect('/');
-    }
-  });
+sessionController.logout = async (req, res) => {
+  try {
+    await req.session.destroy();
+    const user = req.user;
+
+    const lastConnectionLogOUT = await UserService.findAndUpdate(user._id, { last_connection: new Date() })
+    //console.log('Ultima conexión', lastConnectionLogOUT)
+
+    res.redirect('/');
+  } catch (err) {
+    logger.error('Error al deslogearse en el controlador', err.message);
+    res.status(500).render('error/base', { error: err });
+  }
 };
 //Github
 sessionController.github = passport.authenticate('github', { scope: ['user:email'] });

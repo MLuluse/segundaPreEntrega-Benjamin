@@ -61,8 +61,8 @@ const initializePassport = () => {
 
             const user = await UserService.findUser({ email: username })
             //console.log('user en el pasport', user)
-            const uConeccion = await UserService.findAndUpdate(user._id, {last_connection: new Date})
-            //console.log('Ultima coneccion', uConeccion)
+            const lastConnectionLogin = await UserService.findAndUpdate(user._id, {last_connection: new Date})
+            //console.log('Ultima coneccion', lastConnectionLogin)
             if (!user) {
                 return done(null, false)
             }
@@ -81,17 +81,15 @@ const initializePassport = () => {
         try{
             const user = await UserService.findUser({email: profile._json.email})
             if (user){ 
-            const uConeccion = await UserService.findAndUpdate(user._id, {last_connection: new Date})
-            //console.log('Ultima coneccion', uConeccion)
-            return done(null, user) }//si ya existe el ususario no lo guarda en base de datos
+            const lastConnectionLogin = await UserService.findAndUpdate(user._id, {last_connection: new Date})
+            //console.log('Ultima coneccion', lastConnectionLogin)
+            return done(null, user) }
 
-            const Cart = await CartService.create({})  //creo el carrito para github
+            const Cart = await CartService.create({})
             const newUser = {
                 first_name: profile._json.login,
                 last_name: profile._json.name,
                 email: profile._json.email,
-                //password: profile._json.password,
-                //role: "user",
                 cart: Cart._id
             }
             //console.log('newUser github',newUser)

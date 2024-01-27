@@ -12,6 +12,7 @@ sessionController.loginPage = async (req, res) => {
 
 sessionController.profile = (req, res) => {
   const userDTO = new UserDTO(req.session.user)
+  //console.log('DTO EN EL SESSIONCONTROLLER', userDTO)
   res.render('sessions/profile', userDTO)
 }
 
