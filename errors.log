@@ -225,3 +225,6 @@
 {"level":"error","message":"difernete rol quizo quizo cambiar cosas","timestamp":"2024-01-29T01:13:02.975Z"}
 {"level":"error","message":"Error al postear un producto al carrito","timestamp":"2024-01-29T01:17:28.404Z"}
 {"level":"error","message":"Error al postear un producto al carrito","timestamp":"2024-01-29T13:43:30.310Z"}
+{"level":"error","message":"Error al deslogearse en el controlador","timestamp":"2024-01-29T21:05:40.907Z"}
+{"level":"error","message":"Error al deslogearse en el controlador","timestamp":"2024-01-29T21:06:31.481Z"}
+{"level":"error","message":"difernete rol quizo quizo cambiar cosas","timestamp":"2024-01-29T21:11:30.012Z"}

@@ -31,11 +31,11 @@
             if (result.status === 'success') {
             alert(`Cambio su Role. Vuelva a logearse para ver los cambios`);
             window.location.href = '/current';
-        } else {
+            } else {
             alert(`Error: ${result.error}`);
-        }
-    })
-    .catch(err => alert(`Ocurrió un error :(\n${err}`));
+            }
+        })
+        .catch(err => alert(`Ocurrió un error :(\n${err}`));
 }
 </script>
 

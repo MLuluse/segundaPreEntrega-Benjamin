@@ -144,7 +144,7 @@ export const UserDeleted = async (destinatario) => {
       },
     };
 
-    let mail = Mailgenerator.generate(response);
+    let mail = Mailgenerator.generate(response)
 
     let message = {
       from: 'Coder Shop',
@@ -153,10 +153,58 @@ export const UserDeleted = async (destinatario) => {
       html: mail,
     };
 
+    await transporter.sendMail(message)
+    return { success: true, message: 'Email sent successfully' }
+  } catch (err) {
+    logger.error('error al generar mail', err)
+    return { success: false, error: err.message }
+  }
+}
+
+export const YourProductHasBeenDeleted = async (destinatario, productId) => {
+  try {
+    let config = {
+      service: 'gmail',
+      auth: {
+        user: process.env.MAILER_USER,
+        pass: process.env.MAILER_PASS,
+      },
+      tls: {
+        rejectUnauthorized: false,
+      }
+  }
+
+    let transporter = nodemailer.createTransport(config)
+
+    let Mailgenerator = new Mailgen({
+      theme: 'default',
+      product: {
+        name: 'Codershop',
+        link: 'http://www.coderhouse.com',
+      },
+    });
+
+    let response = {
+      body: {
+        intro: `Your Product ${productId} Has Been Deleted from the Data Base By Administation`,
+
+        outro: `For more information please contact us, Thank you`,
+      },
+    };
+
+    let mail = Mailgenerator.generate(response);
+
+    let message = {
+      from: 'Coder Shop',
+      to: destinatario,
+      subject: `Your product has been deleted  `,
+      html: mail,
+    };
+
     await transporter.sendMail(message);
     return { success: true, message: 'Email sent successfully' };
   } catch (err) {
     logger.error('error al generar mail', err)
-    return { success: false, error: err.message };
+    return { success: false, error: err.message }
   }
-};
+}

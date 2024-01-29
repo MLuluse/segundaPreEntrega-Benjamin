@@ -3,6 +3,7 @@ import CustomError from "../services/errors/costum_error.js"
 import EErros from "../services/errors/enums.js"
 import  {generateErrorInfo}  from "../services/errors/info.js"
 import logger from "../utils/logger.js"
+import { YourProductHasBeenDeleted } from "../services/mail.service.js"
 
 //ALL
 export const getAllProductsContoller = async(req, res) =>{
@@ -88,19 +89,31 @@ export const deleteProductByIdController = async( req, res) =>{
         const userInfo = {email: req.session.user.email, role: req.session.user.role}
 
         const product = await ProductService.getById(productId)
-        //console.log(product)
-        if (!product) {
-            return res.status(404).json({ error: 'Producto no encontrado en la base de datos' })
+        if (!product) {return res.status(404).json({ error: 'Producto no encontrado en la base de datos' })}
+
+        if (userInfo.role !== 'admin' && product.owner !== userInfo.email) {
+            return res.status(403).json({ status: 'error', error: 'No estás autorizado a borrar este producto' });
         }
-        if (product.owner !== userInfo.email) return res.status(403).json({ status: 'error', error: 'No estas autorizado a borrar este producto'})
         if (userInfo.role === 'admin' || product.owner === userInfo.email) {
             const deleteProduct = await ProductService.remove(product)
-            if (!deleteProduct)  return res.status(404).json({ error: `Producto con ID: '${product}' no encontrado` })
+
+        if (!deleteProduct)  return res.status(404).json({ error: `Producto con ID: '${product}' no encontrado` })
+        
         
         const products = await ProductService.printProducts()
+        if (userInfo.role === 'premium') {
+            const mailResult = await YourProductHasBeenDeleted(product.owner, productId);
+        
+            if (mailResult.success) {
+                console.log('Email notification sent successfully');
+            } else {
+                console.error('Error sending email notification:', mailResult.error);
+            }
+        }
+    
         res.status(200).json({status: 'success', payload: products})
-    } }
-    catch(err){
+        }
+    }catch(err){
         logger.error(`Error al eliminar el producto", ${err.message}`)
         res.status(500).json({status: 'error', error: err.message})
     }

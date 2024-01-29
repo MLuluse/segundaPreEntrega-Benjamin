@@ -57,9 +57,10 @@ sessionController.logout = async (req, res) => {
     await req.session.destroy();
     const user = req.user;
 
-    const lastConnectionLogOUT = await UserService.findAndUpdate(user._id, { last_connection: new Date() })
-    //console.log('Ultima conexión', lastConnectionLogOUT)
-
+    if (user && user.role !== 'admin') {
+      const lastConnectionLogOUT = await UserService.findAndUpdate(user._id, { last_connection: new Date() });
+      //console.log('Ultima conexión', lastConnectionLogOUT)
+    }
     res.redirect('/');
   } catch (err) {
     logger.error('Error al deslogearse en el controlador', err.message);
