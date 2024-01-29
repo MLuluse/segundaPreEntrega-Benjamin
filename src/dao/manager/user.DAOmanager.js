@@ -29,10 +29,11 @@ const userDAO = {
         return UsersBorrados
     },
     
-    getAllInactiveUsers : async (data) => {
-        const InactiveUser = await userModel.find({ last_connection: { $lt: data } })
-        return InactiveUser
-    }
+    getAllInactiveUsers : async (date) => {
+          const inactiveUsers = await userModel.find({ last_connection: { $lt: date } })
+          return inactiveUsers
+    },
+
 
 }
 

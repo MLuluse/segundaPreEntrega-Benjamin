@@ -6,6 +6,7 @@ export default class AllUsersDTO {
         }
 
         this.users = users.map(user => ({
+            id: user._id,
             full_name: `${user.first_name} ${user.last_name}`,
             email: user.email,
             role: user.role

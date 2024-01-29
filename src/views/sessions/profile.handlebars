@@ -28,13 +28,14 @@
         })
         .then(result => result.json())
         .then(result => {
-            //if (result.status === 'error') throw new Error(result.error)
-            alert(`Cambio su Role vuelva a logerse para ver los cambios`)
-            window.location.href = '/current'
-        })
-        .catch(err => alert(`Ocurrió un error :(\n${err}`))
-
-
-    }
+            if (result.status === 'success') {
+            alert(`Cambio su Role. Vuelva a logearse para ver los cambios`);
+            window.location.href = '/current';
+        } else {
+            alert(`Error: ${result.error}`);
+        }
+    })
+    .catch(err => alert(`Ocurrió un error :(\n${err}`));
+}
 </script>
 

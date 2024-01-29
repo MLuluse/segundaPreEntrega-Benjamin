@@ -5,7 +5,7 @@ import Mailgen from 'mailgen';
 import logger from '../utils/logger.js';
 
 
-const sendTicketByEmail = async (destinatario, ticket) => {
+export const sendTicketByEmail = async (destinatario, ticket) => {
   try {
     let config = {
       service: 'gmail',
@@ -61,6 +61,7 @@ const sendTicketByEmail = async (destinatario, ticket) => {
   }
 };
 
+
 export const restorePasswordMail = async (destinatario, token) => {
   try {
   const mailerConfig = {
@@ -112,4 +113,50 @@ let message = {
 }
 }
 
-export default sendTicketByEmail
+export const UserDeleted = async (destinatario) => {
+  try {
+    let config = {
+      service: 'gmail',
+      auth: {
+        user: process.env.MAILER_USER,
+        pass: process.env.MAILER_PASS,
+      },
+      tls: {
+        rejectUnauthorized: false,
+      }
+  }
+
+    let transporter = nodemailer.createTransport(config);
+
+    let Mailgenerator = new Mailgen({
+      theme: 'default',
+      product: {
+        name: 'Codershop',
+        link: 'http://www.coderhouse.com',
+      },
+    });
+
+    let response = {
+      body: {
+        intro: "Your User has been deleted  from our servicedue to inactivity.\n\nDeletion Reason: Inactive Account\nDeletion Date: " + new Date().toLocaleDateString(),
+
+        outro: `If you want to subscribe again visit us http://localhost:8080`,
+      },
+    };
+
+    let mail = Mailgenerator.generate(response);
+
+    let message = {
+      from: 'Coder Shop',
+      to: destinatario,
+      subject: `Your user ${destinatario} has been deleted  `,
+      html: mail,
+    };
+
+    await transporter.sendMail(message);
+    return { success: true, message: 'Email sent successfully' };
+  } catch (err) {
+    logger.error('error al generar mail', err)
+    return { success: false, error: err.message };
+  }
+};

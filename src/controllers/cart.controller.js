@@ -2,7 +2,7 @@ import { ProductService } from '../services/services.js'
 import { CartService } from '../services/services.js'
 import { TicketService } from '../services/services.js'
 import { generateRandomCode } from '../utils/utils.js'
-import sendTicketByEmail from '../services/mail.service.js'
+import { sendTicketByEmail } from '../services/mail.service.js'
 import logger from '../utils/logger.js'
 
 

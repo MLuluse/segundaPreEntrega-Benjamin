@@ -5,7 +5,8 @@ const UserRepository = (userDao) => {
     const createUser = async (data) => await userDao.create(data)
     const findAndUpdate =  async (id, data) => await userDao.findAndUpdate(id, data)
     const eliminate = async (id) => await userDao.delete(id)
-    const getAllInactive = async (data) => await userDao.getAllInactive(data)
+    const getAllInactive = async (date) => await userDao.getAllInactiveUsers(date)
+
 
     return{
         getAll,

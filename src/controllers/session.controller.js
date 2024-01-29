@@ -126,7 +126,7 @@ sessionController.resetPass = async (req, res) => {
       res.json({ status: 'error', error: err.message })
   }
 }
-
+/*
 sessionController.exchangeRole = async (req, res) => {
   try {
       const id = req.params.uid
@@ -138,6 +138,6 @@ sessionController.exchangeRole = async (req, res) => {
   } catch(err) {
       res.json({ status: 'error', error: err.message })
   }
-}
+}*/
 
 export default sessionController;

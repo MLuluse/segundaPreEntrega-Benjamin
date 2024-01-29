@@ -5,8 +5,15 @@
             <h2>Panel de Usuarios</h2>
         </div>
     </div>
-    <a class="btn btn-primary" href="/products"> Volver </a>
-    <hr />
+    <div class="container text-center">
+        <div class="mt-5">
+            <a onclick="removeInactiveUsers()" class="btn btn-secondary btn-lg btn-block">Eliminar los usarios Inactivos</a>
+        </div>
+    </div>
+    <div>
+        <a class="btn btn-primary" href="/products"> Volver </a>
+    </div>
+    
     <table class="table table-bordered table-striped table-hover mt-5 text-center align-middle" id="productsTable">
         <thead class="table-dark">
             <tr>
@@ -24,12 +31,12 @@
                     <td>{{this.email}}</td>
                     <td>{{this.role}}</td>
                     <td>
-                        <button class="btn btn-warning btn-sm" onclick="changeRole('{{this.email}}')">Cambiar el Rol</button>
+                        <button class="btn btn-warning btn-sm" onclick="changeRole('{{this.id}}')">Cambiar el Rol</button>
                     </td>
                     <td>
                         <button
                             class="btn btn-danger"
-                            onclick="deleteUser('{{this.email}}')"
+                            onclick="deleteUser('{{this.id}}')"
                         >
                             ❌
                         </button>
@@ -38,15 +45,11 @@
             {{/each}}
         </tbody>
     </table>
-    <div class="container text-center">
-        <div class="mt-5">
-            <a onclick="removeInactiveUsers()" class="btn btn-secondary btn-lg btn-block">Eliminar los usarios que llevan 48 hs inactivos</a>
-        </div>
-    </div>
+    
 </div>
 <script>
-    changeRole = (email) => {
-     fetch(`/api/users/premium/${email}` , {
+    changeRole = (id) => {
+     fetch(`/api/users/premium/${id}` , {
             method: 'get',
             headers: {
                 "Content-Type": "application/json"
@@ -54,15 +57,13 @@
         })
         .then(result => result.json())
         .then(result => {
-            if (result.status === 'error') throw new Error(result.error)
-            alert(`Cambio el Role del user`)
-            setTimeout(()=>{
-                location.reload()
-            },1000)
-
-        })
-        .catch(err => alert(`Ocurrió un error :(\n${err}`))
-
-
-    }
+            if (result.status === 'success') {
+            alert(`Cambio su Role. Vuelva a logearse para ver los cambios`);
+            window.location.href = '/current';
+        } else {
+            alert(`Error: ${result.error}`);
+        }
+    })
+    .catch(err => alert(`Ocurrió un error :(\n${err}`));
+}
 </script>

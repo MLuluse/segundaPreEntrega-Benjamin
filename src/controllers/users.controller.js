@@ -2,13 +2,15 @@
 import { UserService } from "../services/services.js"
 import logger from "../utils/logger.js"
 import AllUsersDTO from "../dto/allUsers.dto.js"
+import { UserDeleted } from "../services/mail.service.js" 
+
 
 export const getAllUsersController = async(req, res) => {
     try{
         const users = await UserService.getAll()
         const allUsers = new AllUsersDTO(users)
         //console.log('para ver los documents', allUsers)
-        res.status(200).json({ status: "success", message: "Todos los user fueron obtenidos con éxito", payload: users })
+        res.status(200).json({ status: "success", message: "Todos los user fueron obtenidos con éxito", payload: allUsers })
     }catch (err) {
         logger.error("Error al obtener todos los usuarios", err.message)
         res.status(404).json({ error: err.message });
@@ -94,7 +96,40 @@ export const uploadDocument = async (req, res) => {
 
 
   export const deleteInactiveUsersController = async ( req, res) => {
+    try{
+      const currentDate = new Date()
+      //console.log('current date', currentDate)
+      const limitDate = new Date(currentDate)
+      limitDate.setDate(currentDate.getDate() - 2)
+      //console.log('limite de fecha', limitDate)
 
+      const inactiveUsers = await UserService.getAllInactive(limitDate)
+      //console.log('usuarios Inactivos en 48 hs', inactiveUsers)
 
+      for (const user of inactiveUsers) {
+        //aca llamo al mail service y elimino
+        await UserDeleted(user.email)
+        await UserService.eliminate(user._id)
+      }
+  
+      res.status(200).json({ success: true, message: 'Usuarios Inactivos Borrados y notificados' })
+    } catch (error) {
+      res.staus(500).json({status:'error', error: 'Algo salió mal en la eliminación del User Inactivo'})
   }
+  }
+  
+  export const deleteUserByIdController = async (req, res) => {
+    try{
+      const uid = req.params.uid
 
+      const user = await UserService.findById(uid)
+      if(!user) return res.status(404).json({status:'error', error: 'Usuario no encontrado en DB'})
+
+      await UserService.eliminate(user._id)
+
+      res.status(201).json({status: 'success', message: 'El usuario se elimino con éxito'})
+
+    }catch(error){
+    res.status(500).json({status:'error', error: 'Algo salió mal en la eliminación del un User'})
+    }
+  }
