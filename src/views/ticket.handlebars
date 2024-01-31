@@ -11,13 +11,13 @@
             </tr>
         </thead>
         <tbody>
-            <!-- Itera sobre los productos en el ticket -->
-            {{#each ticket.products}}
+            
+            {{#each data}}
             <tr>
-                <td>{{this.product._id}}</td>
-                <td>{{this.product.title}}</td>
-                <td>{{this.product.price}}</td>
-                <td>{{this.this.quantity}}</td>
+                
+                <td>{{title}}</td>
+                <td>{{precio}}</td>
+                <td>{{cantidad}}</td>
             </tr>
             {{/each}}
         </tbody>

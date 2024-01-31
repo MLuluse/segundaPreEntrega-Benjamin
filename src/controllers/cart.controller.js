@@ -221,10 +221,7 @@ export const purchaseCartController = async (req, res) => {
                     price: product.price,
                     quantity: item.quantity,
                 })
-
-            //console.log(productsToTicket, 'despues del productstotick')
             } else {
-                // No hay suficiente stock, dejar el producto en el carrito
                 productsInCartAfterBuy.push(item);
             }
         }
@@ -234,16 +231,24 @@ export const purchaseCartController = async (req, res) => {
             amount,
             purchaser: req.session.user.email 
         })
-        // Carrito despues de la compra
+
         cart.products = productsInCartAfterBuy
         await cart.save()
 
-        // Envío de correo electrónico después de guardar el carrito
-        const emailResult = await sendTicketByEmail(req.session.user.email, ticket)
-        //console.log('console de ticket', ticket)
-        //console.log('console de ticket.products', ticket.products)
 
-        res.status(200).json({ status: 'success', payload: ticket, message: emailResult.message})
+        const emailResult = await sendTicketByEmail(req.session.user.email, ticket)
+
+        const ticketInfo = await TicketService.findTicket(ticket._id)
+
+        const data = ticketInfo.products.map((productInfo) => ({
+            title: productInfo.product.title,
+            precio: `$${productInfo.price}`,
+            cantidad: productInfo.quantity,
+            }));
+
+        console.log('data dentro del controller', data )
+
+        res.status(200).render('ticket', {ticket: ticketInfo, data: data} )
     } catch (err) {
         logger.error('Error al intentar termianar la compra', cid)
         res.status(500).json({ status: 'error', error: err.message })
