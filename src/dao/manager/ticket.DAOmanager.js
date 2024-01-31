@@ -2,7 +2,7 @@ import ticketModel from '../models/ticket.model.js'
 
 const ticketDAO = {
     findById : async (id) => {
-        const getById = await ticketModel.findById(id)
+        const getById = await ticketModel.findById(id).populate('products.product').lean()
         return getById
     },
 
@@ -18,10 +18,6 @@ const ticketDAO = {
         }catch(err){
             return('Error al recibir los productos del print manager', err.message)
             }
-    },
-
-    update : async (id) => {
-        const updateTicket = await ticketModel.update(id)
     }
 }
 

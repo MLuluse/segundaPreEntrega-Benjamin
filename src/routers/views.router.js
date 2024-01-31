@@ -1,5 +1,5 @@
 import {Router} from "express"
-import { cartInfoViewsController, getProductsViewController, realtimeProductsViewController, productDetailViewController, usersAdminViewontroller} from "../controllers/views.controller.js"
+import { cartInfoViewsController, getProductsViewController, realtimeProductsViewController, productDetailViewController, usersAdminViewontroller, ticketViewsController} from "../controllers/views.controller.js"
 import { handlePolices } from "../middlewares/auth.middleware.js"
 
 const router = Router()
@@ -12,9 +12,9 @@ router.get('/:cid', handlePolices(['USER', 'ADMIN', 'PREMIUM']),cartInfoViewsCon
 
 router.get('/product/:pid', handlePolices(['USER', 'ADMIN', 'PREMIUM']), productDetailViewController)
 
+router.get('/purchaseTicket', ticketViewsController)
+
 router.get('/usersAdminViews/:email', handlePolices(['ADMIN']), usersAdminViewontroller )
-
-
 
 
 export default router

@@ -240,12 +240,10 @@ export const purchaseCartController = async (req, res) => {
 
         // Envío de correo electrónico después de guardar el carrito
         const emailResult = await sendTicketByEmail(req.session.user.email, ticket)
-        //console.log('ticket.products', ticket.products)
-        if (emailResult.success) {
-         res.status(200).json({ status: 'success', payload: ticket, message: emailResult.message })
-        } else {
-         res.status(500).json({ status: 'error', error: emailResult.error })
-        }
+        //console.log('console de ticket', ticket)
+        //console.log('console de ticket.products', ticket.products)
+
+        res.status(200).json({ status: 'success', payload: ticket, message: emailResult.message})
     } catch (err) {
         logger.error('Error al intentar termianar la compra', cid)
         res.status(500).json({ status: 'error', error: err.message })

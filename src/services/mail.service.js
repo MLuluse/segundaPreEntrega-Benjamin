@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 import Mailgen from 'mailgen';
 import logger from '../utils/logger.js';
+import { TicketService } from './services.js';
 
 
 export const sendTicketByEmail = async (destinatario, ticket) => {
@@ -29,16 +30,23 @@ export const sendTicketByEmail = async (destinatario, ticket) => {
     });
 
     //logger.info('ticket dentro del service', ticket)
+    const ticketInfo = await TicketService.findTicket(ticket._id)
+    //console.log('ticketInfo en mail service', ticketInfo)
 
+    const data = ticketInfo.products.map((productInfo) => ({
+      title: productInfo.product.title,
+      unitary_price: `$${productInfo.price}`,
+      quantity: productInfo.quantity,
+    }));
+    
+    //console.log('Result of map:', data);
+    
     let response = {
       body: {
         intro: "Your ticket details are as follows:",
         table: {
-          data: ticket.products.map((product) => ({
-            item: product.product,
-            price: `$${product.price}`,
-            quantity: product.quantity,
-          })),
+          data,
+          Total_Amount: ticket.amount
         },
         outro: `Total Amount: $${ticket.amount.toFixed(2)}`,
       },

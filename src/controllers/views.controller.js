@@ -70,6 +70,15 @@ export const productDetailViewController =  async (req, res) => {
 
     }
 
+export const ticketViewsController = async (req, res) => {
+    const ticket = req.params.tid
+    const result = await TicketService.findTicket(ticket)
+    if (!result) {
+        return res.status(404).render({error: 'No pudimos encontrar el Ticket de compra'})}
+        res.status(200).render("ticket", {ticket: result})
+
+}
+
 export const usersAdminViewontroller  = async (req, res) => {
     const email = req.params.email
     if ( email === 'adminCoder@coder.com' ){

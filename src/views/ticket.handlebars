@@ -5,7 +5,9 @@
         <thead>
             <tr>
                 <th>Producto</th>
-                <th>Total</th>
+                <th>Titulo</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
             </tr>
         </thead>
         <tbody>
@@ -13,9 +15,9 @@
             {{#each ticket.products}}
             <tr>
                 <td>{{this.product._id}}</td>
-                <td>{{this.price}}</td>
-                <td>{{this.quantity}}</td>
-                
+                <td>{{this.product.title}}</td>
+                <td>{{this.product.price}}</td>
+                <td>{{this.this.quantity}}</td>
             </tr>
             {{/each}}
         </tbody>
