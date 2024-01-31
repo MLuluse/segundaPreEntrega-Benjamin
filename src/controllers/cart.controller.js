@@ -206,8 +206,7 @@ export const purchaseCartController = async (req, res) => {
             if (!product) {
                 return res.status(404).json({ status: 'error', error: `Producto con id: ${item.product} no encontrado` })
             }
-            if (item.quantity <= product.stock) {
-                
+            if (item.quantity <= product.stock) {   
                 const newstock = (product.stock -= item.quantity)
                 //console.log(newstock, 'nuevo stock');
                 //console.log('id del producto', product._id)

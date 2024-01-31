@@ -1,4 +1,5 @@
 <div class="container border border-2 ">
+<div class="menu border border-primary-subtle rounded">
 <h2>Bienvenido {{first_name}}  </h2>
 <div class="user-card">
     <ul>
@@ -15,9 +16,36 @@
     <a class="btn btn-primary" href="/products">Productos</a> 
     <a class="btn btn-primary" href="/carts/{{cart}}">Ver carrito</a>
     <a class="btn btn-primary" href="/api/session/logout">Logout</a>
+  </div>  
+  <br>
+  </div>
+    <hr>
+    <div class="contenedor">
+    <div class="menu border border-primary-subtle rounded">
+    <h3 class="m-3">Cargar Archivos Faltantes</h3>
+    <hr>
+
+    <form action='/api/users/{{id}}/documents' method="post" enctype="multipart/form-data">
+      <label for="profile">Perfil</label>
+      <input type="file" name="profile" id="profile" accept="image/*" />
+      <hr>
+      <label for="products">Productos</label>
+      <input type="file" name="products" id="products" accept="image/*" />
+      <hr>
+      <label for="documents">Documentos</label>
+      <input type="file" name="documents" id="documents" accept="image/*" />
+      <hr>
+      <button type="submit" class="btn btn-primary">Subir</button>
+    </form>
+  </div>
+  <br>
+
+</div>
     <a class="btn btn-warning" onclick="changeRole('{{id}}')">Cambiar Mi Role</a>
+    <br>
 </div>
-</div>
+
+
 <script>
     changeRole = (id) => {
      fetch(`/api/users/premium/${id}` , {

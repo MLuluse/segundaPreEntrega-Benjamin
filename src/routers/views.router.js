@@ -15,4 +15,6 @@ router.get('/product/:pid', handlePolices(['USER', 'ADMIN', 'PREMIUM']), product
 router.get('/usersAdminViews/:email', handlePolices(['ADMIN']), usersAdminViewontroller )
 
 
+
+
 export default router
