@@ -39,7 +39,7 @@ const cartDAO ={
     }catch(err){
         return('Error al obtener el carrito con sus productos', err.message)
         }
-},
+    },
 
     findCartById : async (cid) => {
     try{

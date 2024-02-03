@@ -1,4 +1,4 @@
-import { createCartController, deleteCartController, deleteProductFromCartController, getCartByIdController,  postProductAndQuantityOnCartIdController, updateCartController, updateProductFromCartController,purchaseCartController } from '../controllers/cart.controller.js';
+import { createCartController, deleteCartController, deleteProductFromCartController, getCartByIdController,  postProductAndQuantityOnCartIdController, updateCartController, updateProductFromCartController,purchaseCartController, stripeController } from '../controllers/cart.controller.js';
 import { Router } from "express";
 import { handlePolices } from "../middlewares/auth.middleware.js"
 
@@ -19,5 +19,7 @@ router.put('/:cid/products/:pid', updateProductFromCartController)
 router.delete('/:cid', deleteCartController)
 
 router.get('/:cid/purchase', purchaseCartController)
+
+router.post('/:cid/create-checkout-session', stripeController)
 
 export default router

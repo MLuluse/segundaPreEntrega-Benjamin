@@ -30,5 +30,10 @@ export default{
     ENVIRONMENT:{
         PROD: process.env.ENVIRONMENT_prod,
         DEV: process.env.ENVIRONMENT_dev
+    },
+    
+    STRIPE:{
+        SECRET: process.env.STRIPE_SECRET,
+        PUBLIC: process.env.STRIPE_PUBLICABLE
     }
 }

@@ -28,4 +28,23 @@
 
  <a class="btn btn-primary" href="/api/session/logout">Logout</a>
  <a class="btn btn-primary" href="/products"> Seguir comprando</a>
- <a class="btn btn-primary" href="/api/carts/{{cart._id}}/purchase">Comprar Carrito</a>
+ <button class="btn btn-danger"  onclick="pay('{{cart._id}}')">Comprar Carrito</button>
+
+ <script>
+    pay = async(cid) => {
+    const res = await fetch(`/api/carts/${cid}/create-checkout-session`, {
+        method: 'POST'
+        })
+        const data = await res.json()
+        console.log('data en el click', data.url)
+        if (res.status !== 200) {
+        console.error('Error en la respuesta del servidor:', data);
+        alert('Error al crear la sesión de pago. Por favor, inténtelo nuevamente.')
+        return
+    }
+
+    alert('Pronto le llegará un correo electrónico con su compra');
+    window.location.href = data.url;
+
+}
+ </script>

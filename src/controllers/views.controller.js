@@ -84,7 +84,7 @@ export const usersAdminViewontroller  = async (req, res) => {
     if ( email === 'adminCoder@coder.com' ){
         const users = await UserService.getAll()
         const allUsers = new AllUsersDTO(users)
-        console.log('all users en userAdmin views',allUsers)
+        //console.log('all users en userAdmin views',allUsers)
 
         res.status(200).render('usersAdminViews', allUsers)
     } else {

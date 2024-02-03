@@ -21,9 +21,9 @@ export const getAllUsersController = async(req, res) => {
 export const updatedUserRoleController = async (req, res) => {
     try {
         const  uid= req.params.uid;
-       // console.log('user ID', uid)
+        //console.log('user ID', uid)
         const user = await UserService.findById(uid)
-       // console.log('user dentro de update', user)
+        //console.log('user dentro de update', user)
         let newRole
        
         if (!user) {return res.status(404).json({error: "Usuario no encontrado"})}
@@ -40,7 +40,7 @@ export const updatedUserRoleController = async (req, res) => {
           const nombreSinExtention = partesNombre[0]
           nombresSinExtention.push(nombreSinExtention)
         })
-        //console.log('nombres de documentos sin extenciones', nombresSinExtention)
+        console.log('nombres de documentos sin extenciones', nombresSinExtention)
         const valoresNecesarios = ['identificationDocument', 'addressProofDocument','bankStatementDocument']
 
         if (user.role === 'user' && (valoresNecesarios.every(valor => nombresSinExtention.includes(valor)))) {
@@ -48,52 +48,65 @@ export const updatedUserRoleController = async (req, res) => {
         } else if (user.role === 'premium') {
           newRole = 'user';
         } else {
-          console.log("Falta cargar algun dato");
+          console.log("Falta cargar algun dato")
           return res.status(400).json({ error: "El usuario no ha terminado de procesar su documentación" })
         }
-        //console.log('newRole Print', newRole)
+        console.log('newRole Print', newRole)
         const updatedUser = await UserService.findAndUpdate(user._id, {role: newRole})
         res.status(201).json({ status: "success", message: "Rol de usuario actualizado con éxito", payload: updatedUser })
 
     } catch (err) {
         //logger.error("Error al actualizar el rol del usuario", err.message)
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: err.message })
     }
 }
-export const uploadDocument = async (req, res) => {
-    const userId = req.params.uid
-    const user = await UserService.findById(userId)
-    //console.log('UID en uploader', user)
-    const documents = req.files
-    //console.log('esto es el req.file', documents)
 
-    try {
+export const uploadDocument = async (req, res) => {
+  const userId = req.params.uid
+  const user = await UserService.findById(userId)
+  const documents = req.files
+  //console.log('esto es el req.file', documents)
+
+  function getNewDocumentFileName(documentType, originalName) {
+    switch (documentType) {
+        case 'identificationDocument':
+            return 'identificationDocument'
+        case 'addressProofDocument':
+            return 'addressProofDocument'
+        case 'bankStatementDocument':
+            return 'bankStatementDocument'
+        default:
+            return originalName
+    }
+}
+  try {
       if (!documents || documents.length === 0) {
-        return res.status(400).json({ error: 'No hay documento adjuntado.' });
+          return res.status(400).json({ error: 'No hay documento adjuntado.' })
       }
-      //console.log('documents en upload', documents)
       if (!user) {
-        return res.status(404).json({ error: 'No se encontro el usuario' });
+          return res.status(404).json({ error: 'No se encontro el usuario' })
       }
       const uploadedDocuments = [];
       for (const fieldName in documents) {
-        //console.log('fieldname en docs', fieldName)
-        const newDocument = {
-          name: documents[fieldName][0].originalname,
-          reference: documents[fieldName][0].destination
-         };
-       uploadedDocuments.push(newDocument);
+          const documentType = fieldName;
+          const newFileName = getNewDocumentFileName(documentType, documents[fieldName][0].originalname);
+          const newDocument = {
+              name: newFileName,
+              reference: documents[fieldName][0].destination
+          }
+
+          uploadedDocuments.push(newDocument)
       }
-      //console.log('uploadedDocs en controller', uploadedDocuments)
+       //console.log('uploadedDocuments en controller', uploadedDocuments)
 
-    const uploadDocToUser = await UserService.findAndUpdate({_id: user._id}, { $push: { documents: { $each: uploadedDocuments } } },{ new: true } )
-    res.status(201).json({ message: 'Documentos subidos y usuario actualizado exitosamente', payload: uploadDocToUser })
-    } catch (error) {
-      logger.error('Error en la entrada al subir un documento', error.message)
-      res.status(500).json({ error: 'Error al subir documentos o actualizar el usuario', error});
-    }
+      const uploadDocToUser = await UserService.findAndUpdate({ _id: user._id },{ $push: { documents: { $each: uploadedDocuments } } }, { new: true })
+
+      res.status(201).json({ message: 'Documentos subidos y usuario actualizado exitosamente', payload: uploadDocToUser})
+  } catch (error) {
+      console.error('Error en la entrada al subir un documento', error.message);
+      res.status(500).json({ error: 'Error al subir documentos o actualizar el usuario', error });
   }
-
+};
 
   export const deleteInactiveUsersController = async ( req, res) => {
     try{
@@ -104,15 +117,20 @@ export const uploadDocument = async (req, res) => {
       //console.log('limite de fecha', limitDate)
 
       const inactiveUsers = await UserService.getAllInactive(limitDate)
-      //console.log('usuarios Inactivos en 48 hs', inactiveUsers)
-
-      for (const user of inactiveUsers) {
-        //aca llamo al mail service y elimino
-        await UserDeleted(user.email)
-        await UserService.eliminate(user._id)
+      if (inactiveUsers.length === 0) {
+        res.status(204).json({ success: true, message: 'No hay usuarios inactivos para eliminar.'})
+      }else{
+        for (const user of inactiveUsers) {
+          //aca llamo al mail service y elimino
+          await UserDeleted(user.email)
+          await UserService.eliminate(user._id)
+        }
+    
+        res.status(200).json({ success: true, message: 'Usuarios Inactivos Borrados y notificados' })
       }
-  
-      res.status(200).json({ success: true, message: 'Usuarios Inactivos Borrados y notificados' })
+      console.log('usuarios Inactivos en 48 hs', inactiveUsers)
+
+
     } catch (error) {
       res.staus(500).json({status:'error', error: 'Algo salió mal en la eliminación del User Inactivo'})
   }

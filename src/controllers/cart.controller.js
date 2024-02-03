@@ -4,7 +4,10 @@ import { TicketService } from '../services/services.js'
 import { generateRandomCode } from '../utils/utils.js'
 import { sendTicketByEmail } from '../services/mail.service.js'
 import logger from '../utils/logger.js'
+import Stripe from 'stripe'
+import config from '../config/config.js'
 
+const stripe = new Stripe(config.STRIPE.SECRET)
 
 export const createCartController = async(req, res) => {
     try{
@@ -43,7 +46,7 @@ export const postProductAndQuantityOnCartIdController = async (req, res) => {
         }
         //cheuqueo que el que va a agregar no sea el owner
         if (productToAdd.owner === req.session.user.email){
-            return res.status(400).json ({status:error, error: 'Como usuario Premium, no tiene permisos para agregar productos que usted mismo creo'})
+            return res.status(400).json ({status:'error', error: 'Como usuario Premium, no tiene permisos para agregar productos que usted mismo creo'})
         } 
 
         const productIndex = cartToUpdate.products.findIndex(item => item.product == pid)
@@ -183,6 +186,60 @@ export const deleteCartController = async (req, res) => {
         res.status(500).json({ status: 'error', error: err.message })
     }
 }
+export const stripeController = async ( req, res ) => {
+    const cid = req.params.cid
+    try{
+        const cart = await CartService.findCartById(cid)
+        if (!cart) {
+            return res.status(404).json({ status: 'error', error: `El carrito con el ID ${cid} no se encontró` })
+        }
+        const productsForStripe = []
+        for (const item of cart.products) {
+            const product = await ProductService.getById(item.product);
+            if (!product || item.quantity > product.stock) {
+                return res.status(400).json({ status: 'error', error: 'No hay suficiente stock para algunos productos en el carrito' })
+            }
+            //console.log('product en stripe', product)
+            productsForStripe.push({
+                name: product.title,
+                description: product.description,
+                currency: 'usd',
+                amount: product.price * 100, // Multiplicar por 100 para convertir a centavos
+                quantity: item.quantity,
+            });
+        }
+        //console.log('products for stripe', productsForStripe)
+
+        const lineItems = [];
+        productsForStripe.forEach((info) => {
+            lineItems.push({
+                price_data: {
+                    product_data: {
+                        name: info.name,
+                        description: info.description,
+                    },
+                    currency: info.currency,
+                    unit_amount: info.amount,
+                },
+                quantity: info.quantity,
+            });
+        });
+
+        //console.log('LineItems en stripe', lineItems)
+        
+        const session = await stripe.checkout.sessions.create({
+            line_items: lineItems,
+            mode: 'payment',
+            success_url: `http://localhost:8080/api/carts/${cid}/purchase`, 
+            cancel_url: `http://localhost:8080/carts/${cid}`, // URL para manejar la cancelación del pago
+        });
+        //console.log('session en stripe', session)
+        return res.json(session)
+
+    }catch(error){
+        return res.status(500).json({ status: 'error', error: 'Error al procesar la solicitud' })
+    }
+}
 
 export const purchaseCartController = async (req, res) => {
     const cid = req.params.cid;
@@ -234,8 +291,7 @@ export const purchaseCartController = async (req, res) => {
 
         cart.products = productsInCartAfterBuy
         await cart.save()
-
-
+        
         const emailResult = await sendTicketByEmail(req.session.user.email, ticket)
 
         const ticketInfo = await TicketService.findTicket(ticket._id)
@@ -246,9 +302,9 @@ export const purchaseCartController = async (req, res) => {
             cantidad: productInfo.quantity,
             }));
 
-        console.log('data dentro del controller', data )
+        //console.log('data dentro del controller', data )
 
-        res.status(200).render('ticket', {ticket: ticketInfo, data: data} )
+        res.status(200).render('ticket', {ticket: ticketInfo, data: data})
     } catch (err) {
         logger.error('Error al intentar termianar la compra', cid)
         res.status(500).json({ status: 'error', error: err.message })

@@ -45,13 +45,28 @@ const storage = multer.diskStorage({
       } else if (file.fieldname === 'productImage') {
         cb( null, 'src/public/products/')
       } else if (file.fieldname === 'documents'){
+        cb( null, 'src/public/documents/')}
+        else if (file.fieldname === 'identificationDocument'){
+        cb( null, 'src/public/documents/')
+      }else if (file.fieldname === 'addressProofDocument'){
+        cb( null, 'src/public/documents/')
+      }else if (file.fieldname === 'bankStatementDocument'){
         cb( null, 'src/public/documents/')
       }else {
         cb({ message: 'Tipo de archivo no válido' }, null);
       }
     }, 
     filename: function (req, file, cb) {
-      cb(null, file.originalname)
+      // Cambiar el nombre solo para los archivos específicos
+      if (
+        file.fieldname === 'identificationDocument' ||
+        file.fieldname === 'addressProofDocument' ||
+        file.fieldname === 'bankStatementDocument'
+      ) {
+        cb(null, file.fieldname);
+      } else {
+        cb(null, file.originalname);
+      }
     },
   })
   export const uploader = multer({storage})

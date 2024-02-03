@@ -8,9 +8,9 @@ router.get("/", getAllUsersController)
 
 router.get("/premium/:uid", updatedUserRoleController)
 
-router.post("/:uid/documents", uploader.fields([{name: 'profileImage'},{name:'productImage'},{name:'documents'}]), uploadDocument)
+router.post("/:uid/documents", uploader.fields([{name: 'profileImage'}, {name:'productImage'}, {name:'documents'}, {name:'bankStatementDocument'}, {name: 'addressProofDocument'}, {name: 'identificationDocument'}]), uploadDocument)
 
-router.delete("/inactiveUsers", deleteInactiveUsersController)
+router.delete("/inactiveusers", deleteInactiveUsersController)
 
 router.delete("/:uid", deleteUserByIdController)
 

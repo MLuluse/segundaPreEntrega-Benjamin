@@ -48,6 +48,28 @@
     
 </div>
 <script>
+    removeInactiveUsers = async () => {
+       try {
+        const response = await fetch(`/api/users/inactiveusers`, {
+            method: 'delete',
+        })
+    
+        if (response.status === 204) {
+            alert('No hay usuarios inactivos para eliminar.')
+        } else {
+            const result = await response.json()
+            if (result.status === 'success') {
+                alert(`Usuarios inactivos borrados, Recargue la página para ver los cambios`)
+                window.location.reload()
+            } else {
+                alert(`Error: ${result.error}`)
+            }
+        }
+    } catch (err) {
+        alert(`Ocurrió un error :(\n ${err}`)
+    }
+    }
+
     changeRole = (id) => {
      fetch(`/api/users/premium/${id}` , {
             method: 'get',
@@ -58,12 +80,29 @@
         .then(result => result.json())
         .then(result => {
             if (result.status === 'success') {
-            alert(`Cambio su Role. Vuelva a logearse para ver los cambios`);
-            window.location.href = '/current';
+            alert(`Cambio su Role. Vuelva a logearse para ver los cambios`)
+            window.location.reload()
         } else {
-            alert(`Error: ${result.error}`);
+            alert(`Error: ${result.error}`)
         }
     })
-    .catch(err => alert(`Ocurrió un error :(\n${err}`));
-}
+    .catch(err => alert(`Ocurrió un error :(\n${err}`))
+    }
+
+    deleteUser = (id) => {
+     fetch(`/api/users/${id}` , {
+            method: 'delete',
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        .then(result => result.json())
+        .then(result => {
+        if (result.status === 'error') throw new Error(result.error)
+        alert(`Todo salió bien! :)\n El usuario se borro del db!`)
+        window.location.reload()
+        
+    })
+    .catch(err => alert(`Ocurrió un error :(\n${err}`))
+    }
 </script>

@@ -1,69 +1,104 @@
-<div class="container border border-2 ">
-<div class="menu border border-primary-subtle rounded">
-<h2>Bienvenido {{first_name}}  </h2>
-<div class="user-card">
-    <ul>
+<div class="container border border-2">
+  <div class="menu border border-primary-subtle rounded">
+    <h2>Bienvenido {{first_name}} </h2>
+    <div class="user-card">
+      <ul>
         <li>id: {{id}}</li>
         <li>Firstname: {{first_name}}</li>
         <li>Email: {{email}}</li>
         <li>Role: {{role}}</li>
         <li>Cart: {{cart}}</li>
-    </ul>
-</div>
+      </ul>
+    </div>
 
-<div>
+    <div>
 
-    <a class="btn btn-primary" href="/products">Productos</a> 
-    <a class="btn btn-primary" href="/carts/{{cart}}">Ver carrito</a>
-    <a class="btn btn-primary" href="/api/session/logout">Logout</a>
-  </div>  
-  <br>
+      <a class="btn btn-primary" href="/products">Productos</a>
+      <a class="btn btn-primary" href="/carts/{{cart}}">Ver carrito</a>
+      <a class="btn btn-primary" href="/api/session/logout">Logout</a>
+    </div>
+    <br />
   </div>
-    <hr>
-    <div class="contenedor">
+  <hr />
+  <div class="contenedor">
     <div class="menu border border-primary-subtle rounded">
-    <h3 class="m-3">Cargar Archivos Faltantes</h3>
-    <hr>
+      <h3 class="m-3">Cargar Archivos Faltantes</h3>
+      <hr />
 
-    <form action='/api/users/{{id}}/documents' method="post" enctype="multipart/form-data">
-      <label for="profile">Perfil</label>
-      <input type="file" name="profile" id="profile" accept="image/*" />
-      <hr>
-      <label for="products">Productos</label>
-      <input type="file" name="products" id="products" accept="image/*" />
-      <hr>
-      <label for="documents">Documentos</label>
-      <input type="file" name="documents" id="documents" accept="image/*" />
-      <hr>
-      <button type="submit" class="btn btn-primary">Subir</button>
-    </form>
+      <form action="/api/users/{{id}}/documents" method="post" enctype="multipart/form-data" id="uploadForm" >
+        <label for="profile">Foto de Perfil</label>
+        <input type="file" name="profile" id="profile" accept="image/*" />
+        <hr />
+        <label for="products">Foto de Productos</label>
+        <input type="file" name="products" id="products" accept="image/*" />
+        <hr />
+        <label for="documents">Documentos Extra</label>
+        <input type="file" name="documents" id="documents" accept="image/*" />
+        <hr />
+        <label for="identificationDocument">Documento de Identificación</label>
+        <input type="file" name="identificationDocument" id="identificationDocument" accept="image/*" />
+        <hr />
+        <label for="addressProofDocument">Documento de Prueba de Domicilio</label>
+        <input type="file" name="addressProofDocument" id="addressProofDocument" accept="image/*" />
+        <hr />
+        <label for="bankStatementDocument">Estado de Cuenta Bancaria</label>
+        <input type="file" name="bankStatementDocument" id="bankStatementDocument" accept="image/*"/>
+        <hr />
+        <button type="submit" class="btn btn-primary">Subir</button>
+       
+      </form>
+    </div>
+    <br />
+
   </div>
-  <br>
-
+  <a class="btn btn-warning" onclick="changeRole('{{id}}')">Cambiar Mi Role</a>
+  <br />
 </div>
-    <a class="btn btn-warning" onclick="changeRole('{{id}}')">Cambiar Mi Role</a>
-    <br>
-</div>
-
 
 <script>
-    changeRole = (id) => {
-     fetch(`/api/users/premium/${id}` , {
-            method: 'get',
-            headers: {
-                "Content-Type": "application/json"
-            }
-        })
-        .then(result => result.json())
-        .then(result => {
-            if (result.status === 'success') {
-            alert(`Cambio su Role. Vuelva a logearse para ver los cambios`);
-            window.location.href = '/current';
-            } else {
-            alert(`Error: ${result.error}`);
-            }
-        })
-        .catch(err => alert(`Ocurrió un error :(\n${err}`));
-}
-</script>
+  changeRole = (id) => { 
+    fetch(`/api/users/premium/${id}` , { 
+        method: 'get',
+        headers: { "Content-Type": "application/json" } 
+        }) 
+        .then(result => result.json()) 
+        .then(result => { if (result.status === 'success') 
+        {
+        alert(`Cambio su Role. Vuelva a logearse para ver los cambios`);
+        window.location.href = '/current'
+        } else { alert(`Error: ${result.error}`); }
+        }) 
+        .catch(err => alert(`Ocurrió un error :(\n${err}`))
+         }
 
+
+changeFileName = () => {
+  // Obtener el valor del campo de entrada de archivo
+  const fileInput = document.getElementById('identificationDocument');
+  const fileName = fileInput.value;
+  console.log('fileName en front ', fileName);
+
+  // Cambiar el nombre del archivo según tus requisitos
+  const newFileName = 'identificationDocument';  // Puedes personalizar esto según tus necesidades
+
+  // Obtener el archivo original
+  const originalFile = fileInput.files[0];
+
+  // Crear un nuevo objeto Blob con el nuevo nombre
+  const newFileBlob = new Blob([originalFile], { type: originalFile.type });
+
+  // Crear un nuevo objeto File con el Blob y el nuevo nombre
+  const newFile = new File([newFileBlob], newFileName, { type: originalFile.type });
+
+  // Reemplazar el archivo original con el nuevo archivo
+  fileInput.files = new DataTransfer().items.add(newFile);
+
+  // Puedes imprimir el nuevo nombre para verificar
+  console.log('Nuevo nombre del archivo:', newFileName);
+
+  // Enviar el formulario
+  const uploadForm = document.getElementById('uploadForm');
+  uploadForm.submit();
+}
+
+</script>
